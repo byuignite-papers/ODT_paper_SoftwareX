@@ -74,8 +74,11 @@
 %% \address[label1]{}
 %% \address[label2]{}
 
-\renewcommand{\thefootnote}{\fnsymbol{footnote}}
-\author{Victoria B. Stephens, David O. Lignell\footnote{Corresponding author.\\ \indent \textit{Email address}: davidlignell@byu.edu}}
+%\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\author{Victoria B. Stephens}
+\author{David O. Lignell\corref{cor1}}
+
+\cortext[cor1]{Corresponding author. \ead{davidlignell@byu.edu}}
 
 \address{Department of Chemical Engineering, Brigham Young University, Provo, UT 84602, United States}
 
@@ -224,6 +227,7 @@ This work was supported by the funding from the National Science Foundation unde
 
 Special thanks to Alan R. Kerstein for his significant contributions to model development. Additional thanks to Heiko Schmidt, Juan Medina, and Marten Klein of Brandenburg University of Technology Cottbus-Senftenberg, Michael Oevermann and Marco Fistler of Chalmers University of Technology, and Vladimir P. Solovjov of Brigham Young University.
 
+
 %% The Appendices part is started with the command \appendix;
 %% appendix sections are then done as normal sections
 %% \appendix
@@ -231,25 +235,11 @@ Special thanks to Alan R. Kerstein for his significant contributions to model de
 %% \section{}
 %% \label{}
 
+
 %% References:
-%% If you have bibdatabase file and want bibtex to generate the
-%% bibitems, please use
-%%
+
 \bibliographystyle{elsarticle-num} 
 \bibliography{references} 
-
-%% else use the following coding to input the bibitems directly in the
-%% TeX file.
-
-%\begin{thebibliography}{00}
-
-%% \bibitem{label}
-%% Text of bibliographic item
-
-%\bibitem{}
-
-%\end{thebibliography}
-Please add the reference to the software repository if DOI for software is available. 
 
 \section*{Current executable software version}
 \label{}
@@ -261,19 +251,19 @@ Ancillary data table required for sub version of the executable software: (x.1, 
 \hline
 \textbf{Nr.} & \textbf{(Executable) software metadata description} & \textbf{Please fill in this column} \\
 \hline
-S1 & Current software version & For example 1.1, 2.4 etc. \\
+S1 & Current software version & 2.1 \\
 \hline
 S2 & Permanent link to executables of this version  & For example: $https://github.com/combogenomics/$ $DuctApe/releases/tag/DuctApe-0.16.4$ \\
 \hline
-S3 & Legal Software License & List one of the approved licenses \\
+S3 & Legal Software License & MIT license (MIT) \\
 \hline
-S4 & Computing platforms/Operating Systems & For example Android, BSD, iOS, Linux, OS X, Microsoft Windows, Unix-like , IBM z/OS, distributed/web based etc. \\
+S4 & Computing platforms/Operating Systems & Linux, OS X, Microsoft Windows\\
 \hline
-S5 & Installation requirements \& dependencies & \\
+S5 & Installation requirements \& dependencies & CMake 3.12+, Cantera, Git, Doxygen (optional) \\
 \hline
 S6 & If available, link to user manual - if formally published include a reference to the publication in the reference list & For example: $http://mozart.github.io/documentation/$ \\
 \hline
-S7 & Support email for questions & \\
+S7 & Support email for questions & davidlignell@byu.edu \\
 \hline
 \end{tabular}
 \caption{Software metadata (optional)}
@@ -282,5 +272,3 @@ S7 & Support email for questions & \\
 
 \end{document}
 \endinput
-%%
-%% End of file `SoftwareX_article_template.tex'.
