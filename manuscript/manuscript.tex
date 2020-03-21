@@ -67,16 +67,17 @@
 %% \address{Address\fnref{label3}}
 %% \fntext[label3]{}
 
-\title{Title/Name of your software}
+\title{One-dimensional turbulence (ODT): computationally efficient modeling of turbulent reacting flows}
 
 %% use optional labels to link authors explicitly to addresses:
 %% \author[label1,label2]{}
 %% \address[label1]{}
 %% \address[label2]{}
 
-\author{A. Author}
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\author{Victoria B. Stephens, David O. Lignell\footnote{Corresponding author.\\ \indent \textit{Email address}: davidlignell@byu.edu}}
 
-\address{Your institute, some address}
+\address{Department of Chemical Engineering, Brigham Young University, Provo, UT 84602, United States}
 
 \begin{abstract}
 %% Text of abstract 
@@ -86,7 +87,7 @@ Ca. 100 words
 
 \begin{keyword}
 %% keywords here, in the form: keyword \sep keyword
-keyword 1 \sep keyword 2 \sep keyword 3
+turbulence \sep reacting flows \sep one-dimensional turbulence
 
 %% PACS codes here, in the form: \PACS code \sep code
 
@@ -110,23 +111,23 @@ Ancillary data table required for subversion of the codebase. Kindly replace exa
 \hline
 \textbf{Nr.} & \textbf{Code metadata description} & \textbf{Please fill in this column} \\
 \hline
-C1 & Current code version & For example v42 \\
+C1 & Current code version & 2.1 \\
 \hline
-C2 & Permanent link to code/repository used for this code version & For example: $https://github.com/mozart/mozart2$ \\
+C2 & Permanent link to code/repository used for this code version & $github.com/BYUignite/ODT$ \\
 \hline
-C3 & Code Ocean compute capsule & For example: $https://codeocean.com/2017/07/30/neurospeech-colon-an-open-source-software-for-parkinson-apos-s-speech-analysis/code$\\
+C3 & Code Ocean compute capsule & \\
 \hline
-C4 & Legal Code License   & List one of the approved licenses \\
+C4 & Legal Code License   & MIT license (MIT) \\
 \hline
-C5 & Code versioning system used & For example svn, git, mercurial, etc. put none if none \\
+C5 & Code versioning system used & Git \\
 \hline
-C6 & Software code languages, tools, and services used & For example C++, python, r, MPI, OpenCL, etc. \\
+C6 & Software code languages, tools, and services used & C++, Python 3 \\
 \hline
-C7 & Compilation requirements, operating environments \& dependencies & \\
+C7 & Compilation requirements, operating environments \& dependencies & CMake 3.12+, Cantera, Git, Doxygen (optional) \\
 \hline
-C8 & If available Link to developer documentation/manual & For example: $http://mozart.github.io/documentation/$ \\
+C8 & If available Link to developer documentation/manual &  \\
 \hline
-C9 & Support email for questions & \\
+C9 & Support email for questions & davidlignell@byu.edu \\
 \hline
 \end{tabular}
 \caption{Code metadata (mandatory)}
@@ -139,16 +140,12 @@ C9 & Support email for questions & \\
 %% main text
 
 The permanent link to code/repository or the zip archive should include the following requirements: 
-
-README.txt and LICENSE.txt.
-
-Source code in a src/ directory, not the root of the repository.
-
-Tag corresponding with the version of the software that is reviewed.
-
-Documentation in the repository in a docs/ directory, and/or READMEs, as appropriate.
-
-
+\begin{itemize}
+	\item README.txt and LICENSE.txt.
+	\item Source code in a src/ directory, not the root of the repository.
+	\item TO DO: Tag corresponding with the version of the software that is reviewed.
+	\item TO DO: Documentation in the repository in a docs/ directory, and/or READMEs, as appropriate.
+\end{itemize}
 
 
 \section{Motivation and significance}
@@ -211,19 +208,21 @@ Indicate in what way the software is used in commercial settings and/or how it l
 Set out the conclusion of this original software publication.
 
 \section{Conflict of Interest}
-Please select the appropriate text:
+%Please select the appropriate text:
+%
+%Potential conflict of interest exists:
+%We wish to draw the attention of the Editor to the following facts, which may be considered as potential conflicts of interest, and to significant financial contributions to this work. The nature of potential conflict of interest is described below: [Describe conflict of interest]
 
-Potential conflict of interest exists:
-We wish to draw the attention of the Editor to the following facts, which may be considered as potential conflicts of interest, and to significant financial contributions to this work. The nature of potential conflict of interest is described below: [Describe conflict of interest]
-
-No conflict of interest exists:
+%No conflict of interest exists:
 We wish to confirm that there are no known conflicts of interest associated with this publication and there has been no significant financial support for this work that could have influenced its outcome.
 
 
 \section*{Acknowledgements}
 \label{}
 
-Optionally thank people and institutes you need to acknowledge. 
+This work was supported by the funding from the National Science Foundation under Grant Number CBET-1403403. 
+
+Special thanks to Alan R. Kerstein for his significant contributions to model development. Additional thanks to Heiko Schmidt, Juan Medina, and Marten Klein of Brandenburg University of Technology Cottbus-Senftenberg, Michael Oevermann and Marco Fistler of Chalmers University of Technology, and Vladimir P. Solovjov of Brigham Young University.
 
 %% The Appendices part is started with the command \appendix;
 %% appendix sections are then done as normal sections
