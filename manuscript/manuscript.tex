@@ -45,6 +45,7 @@
 
 \begin{document}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frontmatter}
 
 %% Title, authors and addresses
@@ -67,7 +68,7 @@
 %% \address{Address\fnref{label3}}
 %% \fntext[label3]{}
 
-\title{One-dimensional turbulence (ODT): computationally efficient modeling of turbulent reacting flows}
+\title{One-dimensional turbulence (ODT): computationally efficient modeling and simulation of turbulent reacting flows}
 
 %% use optional labels to link authors explicitly to addresses:
 %% \author[label1,label2]{}
@@ -75,17 +76,17 @@
 %% \address[label2]{}
 
 %\renewcommand{\thefootnote}{\fnsymbol{footnote}}
-\author{Victoria B. Stephens}
-\author{David O. Lignell\corref{cor1}}
+\author[label1]{Victoria B. Stephens}
+\author[label2]{John C. Hewson}
+\author[label1]{David O. Lignell\corref{cor1}}
 
 \cortext[cor1]{Corresponding author. \ead{davidlignell@byu.edu}}
 
-\address{Department of Chemical Engineering, Brigham Young University, Provo, UT 84602, United States}
+\address[label1]{Department of Chemical Engineering, Brigham Young University, Provo, UT 84602, USA}
+\address[label2]{Fire Science and Technology Department, Sandia National Laboratories, Albuquerque, NM, USA}
 
 \begin{abstract}
-%% Text of abstract 
-Ca. 100 words
-
+Write this last. About 100 words. 
 \end{abstract}
 
 \begin{keyword}
@@ -101,13 +102,9 @@ turbulence \sep reacting flows \sep one-dimensional turbulence
 
 \end{frontmatter}
 
-\section*{Required Metadata}
-\label{}
-
-\section*{Current code version}
-\label{}
-
-Ancillary data table required for subversion of the codebase. Kindly replace examples in right column with the correct information about your current code, and leave the left column as it is.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Code Metadata}
+\label{metadata}
 
 \begin{table}[H]
 \begin{tabular}{|l|p{6.5cm}|p{6.5cm}|}
@@ -118,98 +115,243 @@ C1 & Current code version & 2.1 \\
 \hline
 C2 & Permanent link to code/repository used for this code version & $github.com/BYUignite/ODT$ \\
 \hline
-C3 & Code Ocean compute capsule & \\
+C3 & Code Ocean compute capsule & N/A\\
 \hline
-C4 & Legal Code License   & MIT license (MIT) \\
+C4 & Legal Code License   & MIT \\
 \hline
 C5 & Code versioning system used & Git \\
 \hline
-C6 & Software code languages, tools, and services used & C++, Python 3 \\
+C6 & Software code languages, tools, and services used & C++, Python \\
 \hline
-C7 & Compilation requirements, operating environments \& dependencies & CMake 3.12+, Cantera, Git, Doxygen (optional) \\
+C7 & Compilation requirements, operating environments \& dependencies & CMake 3.12+, Cantera, Git, Python 3.x, Doxygen (optional) \\
 \hline
-C8 & If available Link to developer documentation/manual &  \\
+C8 & If available Link to developer documentation/manual & N/A \\
 \hline
-C9 & Support email for questions & davidlignell@byu.edu \\
+C9 & Support email for questions & davidlignellbyu.edu \\
 \hline
 \end{tabular}
 \caption{Code metadata (mandatory)}
-\label{} 
 \end{table}
 
 
 \linenumbers
 
-%% main text
+%The permanent link to code/repository or the zip archive should include the following requirements: 
+%\begin{itemize}
+%	\item README.txt and LICENSE.txt.
+%	\item Source code in a src/ directory, not the root of the repository.
+%	\item TO DO: Tag corresponding with the version of the software that is reviewed.
+%	\item TO DO: Documentation in the repository in a docs/ directory, and/or READMEs, as appropriate.
+%\end{itemize}
 
-The permanent link to code/repository or the zip archive should include the following requirements: 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Motivation and significance}
+\label{sec:motivation}
+
+Questions to answer in this section (from SoftwareX template)
+\begin{enumerate}
+	\item What's the scientific background and motivation for this software?
+	\item Why is this important? What problems does it solve?
+	\item How has the software contributed (and/or how will it contribute in the future) to the process of scientific discovery? Cite papers using the software.
+	\item In what experimental setting might someone use this software?
+	\item What related work is there in the literature?
+	\item What algorithms, other code/software, or ideas are used? Cite them. 
+\end{enumerate}
+
+Brain dump notes for this section
 \begin{itemize}
-	\item README.txt and LICENSE.txt.
-	\item Source code in a src/ directory, not the root of the repository.
-	\item TO DO: Tag corresponding with the version of the software that is reviewed.
-	\item TO DO: Documentation in the repository in a docs/ directory, and/or READMEs, as appropriate.
+	\item TO DO MAYBE: divide into two subsections: (1) motivation/significance and (2) model history and development
 \end{itemize}
 
+TEXT COPIED FROM CYLINDRICAL ODT PAPER
 
-\section{Motivation and significance}
-\label{}
+The one-dimensional turbulence (ODT) model was introduced by Kerstein in 1999 \cite{Kerstein_1999}. ODT is computationally efficient because it only resolves flows in a single dimension. Turbulent advection is modeled through stochastic eddy events that are implemented by mapping processes on the domain using triplet maps. Eddy events occur concurrently with the solution of unsteady one-dimensional transport equations for momentum and other scalar quantities. A full range of turbulent length scales is modeled. Eddy event locations, sizes, and occurrence rates are specified dynamically and locally using the momentum fields that evolve with the flow; temperature or scalar fields are also used for buoyant flows. Because the model is one-dimensional, it is limited to homogeneous or boundary layer flows such as jets, wakes, mixing layers, and channel flows. These flows, however, are extremely common in turbulence research, and ODT's computational efficiency and resolution of a full range of scales make it a valuable tool that complements experimental and other simulation methods such as direct numerical simulation (DNS). Unlike ODT, DNS resolves all flow structures in three dimensions, but is computationally expensive. ODT is currently formulated for planar simulations, and the model can be run in temporal or spatial modes. In the temporal mode, the unsteady evolution equations evolve on a one-dimensional domain. In the spatial mode, the flow is assumed steady state (though punctuated with eddy events), and one-dimensional ODT line profiles evolve along a streamwise coordinate that replaces the time coordinate, as is done in steady boundary layer flows.
 
-Introduce the scientific background and the motivation for developing the software. \cite{Lignell_2018}
+All of these simulated flows used the planar formulation of ODT, even when comparing to experiments of round jets. This comparison is reasonable for jets because the Reynolds number is axially invariant in both constant-property spatial round jets and constant-property temporal planar jets \cite{Sun_2017}. To compare temporal ODT simulations to spatial experimental simulations, however, time on the ODT line must be converted to the experimental axial spatial location. This is normally done using a mean line velocity (such as the ratio of the integrated momentum flux to the integrated mass flux) \cite{Sun_2017}, but this implies that all fluid parcels on the line have the same axial location time history. This assumption is not ideal for phenomena that are sensitive to time history, such as soot formation, flame extinction and reignition processes, and particle-turbulence interactions. 
 
-Explain why the software is important, and describe the exact (scientific) problem(s) it solves.
+These limitations in applying the planar ODT formulation to cylindrical flows motivate the work presented here. In this paper, we extend the ODT model from the planar formulation to include cylindrical and spherical formulations. There have been some previous efforts to implement cylindrical and spherical ODT formulations. Krishnamoorthy \cite{Niveditha_thesis} implemented a cylindrical ODT formulation and applied the model in pipe and jet configurations. Lackmann et al. \cite{Lackmann_2017} implemented a spherical formulation of the linear eddy model (LEM) for engine applications. Here, we give a detailed description of cylindrical and spherical formulations of ODT. While the spherical formulation is included for completeness, we focus on the cylindrical formulation because it is most directly applicable to current and previous ODT research efforts. We defer to the literature for much of the existing ODT model formulation, e.g., \cite{Lignell_2013,Ashurst_2005,Kerstein_2001}, and focus on the new cylindrical and spherical geometries. For completeness, however, we include summary information of the ODT model formulation. We present results of the cylindrical formulation applied to pipe flow, a round nonreacting spatial jet, and a round jet flame. A more detailed study of round pipe flow than is possible in this paper is presented by Medina et al. \cite{Medina_2017}.
 
-Indicate in what way the software has contributed (or how it will contribute in the future) to the process of scientific discovery; if available, this is to be supported by citing a research paper using the software.
+TEXT COPIED FROM ABANDONED JOSS DRAFT
 
-Provide a description of the experimental setting (how does the user use the software?).
+The Stochastic Eddy Cascade (SEC) package is a set of models and tools used to simulate turbulent flow systems in which turbulence is modeled by stochastic processes that map so-called "eddy events" onto the domain. Most notably, SEC includes the most current implementation of the one-dimensional turbulence model (ODT), which has been successfully used to simulate turbulent reacting and nonreacting flows with high accuracy and relatively low computational cost. In addition to ODT, SEC also offers a flamelet model for combustion systems, which is useful for model validation and testing. 
 
-Introduce related work in literature (cite or list algorithms used, other software etc.).
+Turbulent flows characterize the vast majority of fluid flows in practical engineering applications, and simulations of turbulent flows provide researchers with valuable insights into complex systems, particularly reacting turbulent flows such as combustion processes \cite{Pope2000}. Turbulence is a complex phemonenon that occurs over the full range of the flow's length and time scales. As a result, resolving the entire flow field by numerically solving the Navier-Stokes equations of fluid flow, as is done in direct numerical simulations (DNS), requires intense computational resources. DNS is a powerful research tool, but its high computational cost makes this approach intractable for most practical engineering flows. In order to achieve solutions to practical flow problems, turbulence is most often modeled. For example, large-eddy simulation (LES) approaches directly resolve large-scale flow structures but model small-scale motion, which often results in accurate, computationally efficient simulation data. Unfortunately, LES approaches can introduce empiricism into flow simulations, and errors can be difficult to isolate and quantify. The one-dimensional turbulence model (ODT) functionally reverses the LES approach, modeling large-scale turbulent advection (which is relatively well-understood) and directly resolving small-scale flow structures. In previous studies, ODT has been shown capable of attaining accuracy comparable to DNS at a fraction of the computational cost \cite{Lignell2015,Abboud2015}, making it an attractive model for simulating turbulent flows, particularly in combustion systems. 
 
+ODT has been applied to a wide range of flows. Early applications focused on homogenous turbulence, wakes, and mixing layers (Kerstein1999,Kerstein2000,Kerstein2001). Later extension to variable-density flows and a spatial downstream coordinate system facilitated its growth and application to more complex flows, including combustion in jet flames (Echekki2001; Hewson2001; Hewson2002; Lignell2012; Punati2011; Abdelsamie2017; Lignell2017; Goshayeshi2015), counterflow flames  (Jozefik2015), wall fires (Monson2016), and sooting flames, (Lignell2015; Hewson2006; Hewson2009; Lignell2015b, Ricks2010), as well as other particle flows (Sun2017; Schmidt2009; Sun2014; Fistler2017).  ODT has also served to complement LES through subgrid modeling studies (Cao2008; Schmidt2003; Schmidt2010) and has been applied to various other flow configurations such as double-diffusive interfaces (GonzalezJuez2011), Rayleigh-Taylor mixing (GonzalezJuez2013), and stratified turbulence (Wunsch2001).  Most recently, the ODT code was extended to include cylindrical and spherical coordinate systems (Lignell2018; Klein2018; Klein2019). During this implementation, the ODT code was drastically overhauled, resulting in the SEC package presented here. Further detail on the current ODT model formulation and implementation can be found in the literature (Ashurst2005; Kerstein2001; Lignell2013; Lignell2018).
 
+Ongoing research involving ODT and SEC spans multiple research groups and subject areas. ODT is currently being used to investigate soot formation and destruction in ethylene jet flames via parametric modeling studies (Hewson2015; Lansinger2015b). The SEC package framework is also being used to develop the hierarchical parcel swapping model (HiPS), which models turbulence with an economical, hierarchical network that represents the fluid as individual parcels capable of switching positions within the tree (Kerstein2013; Kerstein2014). In the future, SEC may also be extended to include the linear eddy model (LEM) (Kerstein1991) and LES approaches. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Software description}
-\label{}
+\label{sec:description}
 
-Describe the software in as much as is necessary to establish a vocabulary needed to explain its impact. 
+\subsection{Model description}
+\label{sub:model_description}
 
+Describe how ODT works here. Turbulent advection via eddy events implemented by triplet maps. Planar vs. cylindrical configurations. Eddy events happen concurrently with solution of transport equations.  Evolution of transport equations in only one dimension. Limited to one-dimensional flows: jets, wakes, mixing layers. This is fine though because those are common in nature and important to research. 
+
+TEXT COPIED FROM UNFINISHED CONFERENCE PAPER
+
+This study employs the most current version of the ODT code as in Lignell et. al. \cite{Lignell_2018}, and the ODT model in general is described in detail in the literature \cite{Lignell_2018,Lignell_2013,Kerstein_1999,Kerstein_2001,Ashurst_2005}. 
+The ODT code uses a Lagrangian finite-volume formulation for diffusive advancement, including adaptive mesh refinement \cite{Lignell_2013}. In this approach, combustion dilation causes grid cells to increase or decrease in volume while mass remains constant within each cell. 
+Turbulent advection is modeled with stochastic processes called "eddy events" that map functions on the domain via triplet maps. These eddy events occur concurrently with the solution of unsteady one-dimensional transport equations for mass, momentum, and enthalpy. In sooting flame cases, we also transport species mass fractions and soot particle size distribution properties. Because the ODT model is one-dimensional, it is limited to homogeneous or boundary-layer flows, such as jets, wakes, and mixing layers; these types of flows, however, are common in nature and central to turbulence research.
+
+ and whose sizes are drawn randomly from a sample distribution. A given eddy of size $l$ and location $x_0$ has an eddy timescale $t$ and an associated eddy rate $1=t$. Eddies occur as a Poisson process in accordance with their given rates. Three ODT parameters control the eddy event process: the eddy rate parameter $C$ scales the rate of occurrence of the eddies; the viscous penalty parameter $Z$ suppresses small eddies; and the large eddy suppression parameter $\beta$ constrains eddies such that they do not reach over the elapsed simulation time. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Software Architecture}
-\label{}
+\label{sub:architecture}
 
-Give a short overview of the overall software architecture; provide a pictorial component overview or similar (if possible). If necessary provide implementation details.
+Things to put in this section (from SoftwareX template)
+\begin{itemize}
+	\item overview of overall software architecture
+	\item optional: pictorial overview
+	\item implementation details
+	\begin{itemize}
+		\item software dependencies?
+		\item how to build and run (or leave this in the code README files? maybe brief description here with full details in README.)
+		\item how to use post processing tools? (TODO: prune post processing tools as much as possible so there's no excess)
+	\end{itemize}
+\end{itemize}
 
-\subsection{Software Functionalities}
-\label{}
+Summary of directory structure:
+\begin{itemize}
+	\item source: source code lives here; yaml files generated by building yaml in build folder get put here as well
+		\begin{itemize}
+			\item more details on directory structure necessary here? not sure if relevant
+		\end{itemize}
+	\item build: go here to build the code
+		\begin{itemize}
+			\item Run: make yaml (only need to do this once, the first time you download/build the code)
+			\item set options/paths for cmake in user\_config file
+			\item Run: cmake -C user\_config ../source
+			\item Run: make -j8
+		\end{itemize}
+	\item input: input files live here; change input files to specify case details
+		\begin{itemize}
+			\item each case type has its own folder; make your own if necessary
+			\item within each case folder, you should see file input.yaml. this is your all-important input file that makes each case unique
+			\begin{itemize}
+				\item talk about most important ODT parameters/options here? or leave to documentation?
+			\end{itemize}
+		\end{itemize}
+	\item run: go here to actually run the code; don't forget to make your changes to the input file first
+		\begin{itemize}
+			\item after building, you'll see odt.x in this folder. you can run it directly (not recommended) or from within one of the bash scripts (better)
+			\item don't forget to give your case a name; this name will be used to label data files dumped to the data directory
+		\end{itemize}
+	\item data: data and runtime files dumped here, organized by case name and individual realizations
+		\begin{itemize}
+			\item TO DO: raw/processed file types and what they contain, how to use them effectively
+		\end{itemize}
+	\item post: post processing tools located here, organized by case type
+	\item doc: doxygen documentation (if generated) lives here
 
-Present the major functionalities of the software.
 
-\subsection{Sample code snippets analysis (optional)}
-\label{}
+\end{itemize}
 
-\section{Illustrative Examples}
-\label{}
+%Give a short overview of the overall software architecture; provide a pictorial component overview or similar (if possible). If necessary provide implementation details.
 
-Provide at least one illustrative example to demonstrate the major functions.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Software Functionalities and Example Cases}
+\label{sec:examples}
 
-Optional: you may include one explanatory video that will appear next to your article, in the right hand side panel. (Please upload any video as a single supplementary file with your article. Only one MP4 formatted, with 50MB maximum size, video is possible per article. Recommended video dimensions are 640 x 480 at a maximum of 30 frames/second. Prior to submission please test and validate your .mp4 file at $ http://elsevier-apps.sciverse.com/GadgetVideoPodcastPlayerWeb/verification$. This tool will display your video exactly in the same way as it will appear on ScienceDirect.).
+Present the major functionalities of the software. 
+\begin{itemize}
+	\item simulating turbulent flow cases, reacting or nonreacting flows
+	\item can simulate laminar flow cases too
+	\item does these things a whole lot faster than other methods do (LES, DNS especially)
+	\item testing LES subgrid modeling assumptions
+	\item simulating cases that DNS can't get to because needed simulation length is too long (i.e. late-flame phenomena)
+\end{itemize}
 
+Example cases:
+\begin{itemize}
+	\item From cylindrical ODT paper:
+	\begin{enumerate}
+		\item pipe flow
+		\item nonreacting round jet
+		\item round jet flame
+	\end{enumerate}
+	\item Other possible example cases:
+	\begin{itemize}
+		\item something to compare with DNS/LES results to illustrate efficiency
+		\item no sooting cases since no soot in the code
+		\item planar vs. cylindrical comparison
+	\end{itemize}
+\end{itemize} 
+
+Things to talk about with example cases:
+\begin{itemize}
+	\item compare to DNS/LES cases; computational efficiency, accuracy
+	\item how data looks before post processing, how post processing works
+\end{itemize}
+
+Future functionalities here?
+\begin{itemize}
+	\item soot stuff
+	\item radiation models
+	\item easier switching between chemistry models?
+\end{itemize}
+
+%\subsection{Sample code snippets analysis (optional)}
+
+%Optional: you may include one explanatory video that will appear next to your article, in the right hand side panel. (Please upload any video as a single supplementary file with your article. Only one MP4 formatted, with 50MB maximum size, video is possible per article. Recommended video dimensions are 640 x 480 at a maximum of 30 frames/second. Prior to submission please test and validate your .mp4 file at $ http://elsevier-apps.sciverse.com/GadgetVideoPodcastPlayerWeb/verification$. This tool will display your video exactly in the same way as it will appear on ScienceDirect.).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Impact}
-\label{}
+\label{sec:impact}
 
-\textbf{This is the main section of the article and the reviewers weight the description here appropriately}
+Questions to answer in this section (from SoftwareX template)
+\begin{enumerate}
+	\item How can new research questions be pursued with this software?
+		\begin{itemize}
+			\item possibility of parametric studies (much harder with DNS/LES/RANS)
+			\item study of late-flame soot and radiation interactions, soot emissions as smoke
+			\item comparative radiation model studies?
+		\end{itemize}
+	\item How does the software improve pursuit of existing research questions?
+		\begin{itemize}
+			\item late-flame behavior becomes easier to study
+			\item validation of LES subgrid models
+			\item soot stuff, especially late in the flame (because soot moves slowly compared to gas species and therefore short simulation times like in DNS aren't enough to study it effectively)
+		\end{itemize}
+	\item How does the software change the daily practice of its users?
+		\begin{itemize}
+			\item cases take hours or days rather than weeks using supercomputer resources
+			\item test cases can be run on local computers (unlike something like DNS) and as background tasks without disrupting other tasks
+			\item ODT as a tool complements other approaches, can cover blind spots and be used in validation
+		\end{itemize}
+	\item How widespread is the software? Who uses it? (Within and outside of intended research area and/or group.)
+		\begin{itemize}
+			\item BYU group
+			\item JCH at Sandia
+			\item Chalmers group in Sweden (Marco Fistler, etc.)
+			\item German university group (Heiko Schmidt, Juan Media, Marten Klein, etc.)
+			\item TO DO: find other groups who have used or currently use ODT
+		\end{itemize}
+	\item How is the software used in commercial settings (if any)? Has it led to creation of spin-off companies?
+		\begin{itemize}
+			\item No commercial use (I think). 
+		\end{itemize}
+\end{enumerate}
 
-Indicate in what way new research questions can be pursued as a result of the software (if any).
+COPIED/PASTED FROM CYLINDRICAL ODT PAPER
+ODT has been applied by a number of researchers to a wide range of flows. These include homogeneous turbulence \cite{Kerstein_1999,Sun_2014}, wakes \cite{Kerstein_2000}, mixing layers \cite{Kerstein_1999,Kerstein_2001,Ashurst_2003,Ashurst_2005}, stratified flows \cite{Wunsch_2001}, Rayleigh-Benard flows \cite{Wunsch_2005}, buoyant wall flows \cite{Dreeben_2000,Shihn_2007}, and channel flows \cite{Schmidt_2009,Schmidt_2003,Lignell_2013}. Schmidt et al. \cite{Schmidt_2013} studied buoyantly-driven cloud-top entrainment with comparisons to water tank experiments. Gonzalez-Juez et al. \cite{Esteban_2013} studied reactive Rayleigh-Taylor mixing. A number of ODT simulations of turbulent jet flames have been performed \cite{Echekki_2001,Hewson_2001,Hewson_2002,Punati_2011,Lignell_2012b,Lignell_2015}. Other combustion applications include wall fires \cite{Monson_2016,Shihn_2004}, buoyant pool fires \cite{Ricks_2010,Hewson_2006,Hewson_2009}, and opposed jet flames \cite{Jozefik_2015}. Several studies used DNS to validate ODT for combustion in temporal planar jets \cite{Punati_2011,Lignell_2012b,Lignell_2015}. ODT has also been applied as a subgrid model for large eddy simulations (LES) \cite{Cao_2008,Schmidt_2003,Schmidt_2010} and in particle dynamics simulations in channel flows \cite{Schmidt_2009}, homogeneous turbulence \cite{Sun_2014}, and jets \cite{Sun_2017,Goshayeshi_2015}.
 
-Indicate in what way, and to what extent, the pursuit of existing research questions is improved (if so).
+Brain dump stuff to include here:
+\begin{itemize}
+	\item future functionalities and plans go here instead of last section?
+\end{itemize}
 
-Indicate in what way the software has changed the daily practice of its users (if so).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusion}
+\label{sec:conclusion}
 
-Indicate how widespread the use of the software is within and outside the intended user group.
+Write this part next to last
+%Set out the conclusion of this original software publication.
 
-Indicate in what way the software is used in commercial settings and/or how it led to the creation of spin-off companies (if so).
-
-\section{Conclusions}
-\label{}
-
-Set out the conclusion of this original software publication.
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conflict of Interest}
 %Please select the appropriate text:
 %
@@ -219,15 +361,20 @@ Set out the conclusion of this original software publication.
 %No conflict of interest exists:
 We wish to confirm that there are no known conflicts of interest associated with this publication and there has been no significant financial support for this work that could have influenced its outcome.
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Acknowledgements}
-\label{}
+\label{acknoledgements}
 
-This work was supported by the funding from the National Science Foundation under Grant Number CBET-1403403. 
+This work is supported in part by the National Science Foundation under Grant No. CBET-1403403
+and in part by the Sandia National Laboratories Advanced Simulation and Computing Physics and
+Engineering Models program. Sandia National Laboratories is a multi-program laboratory
+managed and operated by Sandia Corporation, a wholly owned subsidiary of Lockheed Martin
+Corporation, for the U.S. Department of Energy’s National Nuclear Security Administration
+under contract DE-AC04-94AL85000. 
 
 Special thanks to Alan R. Kerstein for his significant contributions to model development. Additional thanks to Heiko Schmidt, Juan Medina, and Marten Klein of Brandenburg University of Technology Cottbus-Senftenberg, Michael Oevermann and Marco Fistler of Chalmers University of Technology, and Vladimir P. Solovjov of Brigham Young University.
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% The Appendices part is started with the command \appendix;
 %% appendix sections are then done as normal sections
 %% \appendix
@@ -235,14 +382,15 @@ Special thanks to Alan R. Kerstein for his significant contributions to model de
 %% \section{}
 %% \label{}
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% References:
 
 \bibliographystyle{elsarticle-num} 
 \bibliography{references} 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Current executable software version}
-\label{}
+\label{software_version}
 
 Ancillary data table required for sub version of the executable software: (x.1, x.2 etc.) kindly replace examples in right column with the correct information about your executables, and leave the left column as it is.
 
@@ -267,7 +415,6 @@ S7 & Support email for questions & davidlignell@byu.edu \\
 \hline
 \end{tabular}
 \caption{Software metadata (optional)}
-\label{} 
 \end{table}
 
 \end{document}
