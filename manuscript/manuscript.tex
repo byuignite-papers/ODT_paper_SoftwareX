@@ -218,6 +218,15 @@ In an individual simulation, variables live within in the \texttt{domain} class;
 
 The system of nonlinear ODEs is solved using CVODE \cite{Hindmarsh_2020} and user input files are processed with YAML \cite{Beder_2008}, both of which are installed locally during the ODT build process. For reacting flow cases, chemical kinetics and transport are handled by Cantera \cite{Goodwin_2018}, which must be previously installed by the user. 
 
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{../figures/odt_flow_chart/odt_flow_chart.png} 
+	\caption{Diagram of high-level ODT code structure}
+	\label{fig:flowchart}
+\end{figure}
+
+Figure \ref{fig:flowchart} illustrates the basic outline of the ODT code structure.
+
 % You can talk about the basic structure: domain.cc is the main object that holds pointers to everything else. There are back pointers to the domain, so that everyone can see everyone else, as needed. The key quantities are line variables (arrays stored at each point). These are the domainvariables. The domain class has a vector of pointers to these, and also pointers to specific variables to access them by name. This enables both generic looping over variables to have each variable compute, for example, its source term, and also allow specific access to needed variables like the grid positions, etc. The variables are either transported or not. The variables needed for a given simulation are set up in the domaincases class. In addition, there are general parameters. You could discuss the main classes, or maybe show a class flow diagram. These can be easily generated, and doxygen also does some of this.
 
 %Things to put in this section (from SoftwareX template)
