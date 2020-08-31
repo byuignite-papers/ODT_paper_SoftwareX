@@ -288,48 +288,46 @@ To use post-processing tools, navigate to the \texttt{post} directory. Within th
 % reference video that we will eventually make?
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Example Cases}
+\section{Example Case: Canonical Jet Flame}
 \label{sec:examples}
 
-%-----------------------------------------------------------------------------------
-\subsection{Pipe Flow}
-\label{sub:pipeflow}
+%%-----------------------------------------------------------------------------------
+%\subsection{Pipe Flow}
+%\label{sub:pipeflow}
+%
+%% TEXT COPIED/MODIFIED FROM CYLINDRICAL ODT PAPER
+%First, we present an incompressible pipe flow simulation using the temporal, cylindrical ODT formulation. Results for three different friction Reynolds numbers ($Re_\tau$ = 550, 1000, 2000) are compared to DNS results from El Khoury et al. \cite{ElKhoury_2013} ($Re_\tau$ = 550, 1000) and Chin et al. \cite{Chin_2014} ($Re_\tau$ = 2000) for a pipe diameter of $D=2.0$ m and flow density of 1.0 kg$\cdot$m$^{-3}$. Friction velocity values of 1 m$\cdot$s$^{-1}$ ($Re_\tau = 550, 1000$) and 2 m$\cdot$s$^{-1}$ ($Re_\tau = 2000$) were assumed and used to calculate the mean pressure gradient driving the flow. Using initial conditions with uniform velocity profiles, simulations were run until a state of developed flow was achieved, at which point data were gathered until statistical convergence for the root mean square (RMS) velocity difference from the mean profiles occurred. 
+%
+%The simulations were performed with ODT parameters $C = 5$ and $Z = 350$ for the temporal ODT formulation. 
+%%Additionally, a restriction was imposed on the eddy size range by selecting eddies only up to a maximum normalized size of Le,max/D = 1/3. This restriction limits the eddy size by construction, as opposed to the large-eddy suppression mechanism commonly used in ODT simulations [27,45]. 
+%The values of C and Z
+%%and Le,max/D 
+%were adjusted to give good agreement of the ODT results compared to the DNS. Schmidt et al. \cite{Schmidt_2003} showed that higher $Z$ results in the buffer-layer being located further from the wall, and increasing $C$ results in a lower slope of the mean streamwise velocity in the log-layer.
+%%and higher Le,max/D gives a smaller mean streamwise velocity in the wake region.
+%
+%RESULTS AND PLOTS GO HERE
+%
+%\subsection{Non-reacting Jet }
+%\label{sub:nonreactingjet}
+%
+%% TEXT COPIED/MODIFIED FROM CYLINDRICAL ODT PAPER
+%Here, we present ODT simulation results for a non-reacting round, turbulent jet compared to the experimental data of Hussein et al. \cite{Hussein_1994}. The jet consists of air issuing into air through a 1 in (0.0254 m) diameter duct with a uniform exit velocity of 56.2 m$\cdot$s$^{-1}$ and a reported Reynolds number of 95,500. The ODT simulations use this diameter and velocity with a kinematic viscosity of $1.534\cdot10^{-5}$ m$^2$s$^{-1}$, resulting in a Reynolds number of 93,056. The initial velocity profile in the ODT simulations is a modified top-hat profile in which a hyperbolic tangent function of width $\delta$ = 0.1D is used on either side of the jet to smooth the transition between the jet and the free stream. In the spatial formulation of ODT, the streamwise velocity must be positive everywhere on the line, so a small minimum velocity of $v_{min} = 0.1$m$\cdot$s$^{-1}$ is specified and added across the entire velocity profile.
+%
+%ODT simulations were performed with parameters $C = 5.25$, $\beta_{LES} = 3.5$, and $Z=400$. The value of $Z$ is the same as the spatial simulations in \cite{Monson_2016}, and the values of $C$ and $\beta_{LES}$ were adjusted to give good agreement with the experimental data. Note the close agreement of the $C$ and $Z$ parameters here to the optimal values used for the pipe flow simulations ($C = 5$ and $Z = 350$). This illustrates a level of robustness in the ODT parameters and suggests that intermediate values could be successfully applied in both configurations. 
+%
+%1024 independent ODT realizations were performed and results were ensemble averaged. All quantities are normalized consistent with jet similarity scaling. Downstream locations are normalized by the jet diameter $D$, and radial locations are normalized by $(y-y_0)$, where $y$ is the downstream location and $y_0 = 4D$ is the virtual origin used in \cite{Hussein_1994}. 
+%
+%RESULTS AND PLOTS GO HERE
+%
+%%In the figure, $v_0$ is the jet exit velocity and $v_{cL}$ is the local mean axial centerline velocity. Here, $r$ is used to denote both the experimental radial location and the ODT line position $x$.
+%
+%%It is worth noting that the vrms profile depends somewhat on the ODT parameters selected. Hewson and Kerstein [15] demonstrated that mean centerline values of mixture fraction were insensitive to C and βles provided their ratio was kept constant. In these simulations, however, higher values of RMS fluctuations were observed at lower values of βles. Figure 9 shows results for TMA similar to those in Fig. 8 with varying C and βles. Each of the three cases has C/βles = 2, with C = 7, 5, and 3. Plots (b) and (c) show axial location
+%
+%%The centerline velocity decay and radial profiles show good agreement, as with the previous cases, with a slight improvement in the radial velocity profile. The vrms profiles are significantly improved along the centerline compared to TMA and TMB. The centerline anomaly is not completely removed, however, since implemented eddies are still subject to the geometric distortion of the TMB map, whose influence is felt by the τ−1 calculation for subsequent eddy events. e
 
-% TEXT COPIED/MODIFIED FROM CYLINDRICAL ODT PAPER
-First, we present an incompressible pipe flow simulation using the temporal, cylindrical ODT formulation. Results for three different friction Reynolds numbers ($Re_\tau$ = 550, 1000, 2000) are compared to DNS results from El Khoury et al. \cite{ElKhoury_2013} ($Re_\tau$ = 550, 1000) and Chin et al. \cite{Chin_2014} ($Re_\tau$ = 2000) for a pipe diameter of $D=2.0$ m and flow density of 1.0 kg$\cdot$m$^{-3}$. Friction velocity values of 1 m$\cdot$s$^{-1}$ ($Re_\tau = 550, 1000$) and 2 m$\cdot$s$^{-1}$ ($Re_\tau = 2000$) were assumed and used to calculate the mean pressure gradient driving the flow. Using initial conditions with uniform velocity profiles, simulations were run until a state of developed flow was achieved, at which point data were gathered until statistical convergence for the root mean square (RMS) velocity difference from the mean profiles occurred. 
+%\subsection{Jet Flame}
+%\label{sub:jetflame}
 
-The simulations were performed with ODT parameters $C = 5$ and $Z = 350$ for the temporal ODT formulation. 
-%Additionally, a restriction was imposed on the eddy size range by selecting eddies only up to a maximum normalized size of Le,max/D = 1/3. This restriction limits the eddy size by construction, as opposed to the large-eddy suppression mechanism commonly used in ODT simulations [27,45]. 
-The values of C and Z
-%and Le,max/D 
-were adjusted to give good agreement of the ODT results compared to the DNS. Schmidt et al. \cite{Schmidt_2003} showed that higher $Z$ results in the buffer-layer being located further from the wall, and increasing $C$ results in a lower slope of the mean streamwise velocity in the log-layer.
-%and higher Le,max/D gives a smaller mean streamwise velocity in the wake region.
-
-RESULTS AND PLOTS GO HERE
-
-\subsection{Non-reacting Jet }
-\label{sub:nonreactingjet}
-
-% TEXT COPIED/MODIFIED FROM CYLINDRICAL ODT PAPER
-Here, we present ODT simulation results for a non-reacting round, turbulent jet compared to the experimental data of Hussein et al. \cite{Hussein_1994}. The jet consists of air issuing into air through a 1 in (0.0254 m) diameter duct with a uniform exit velocity of 56.2 m$\cdot$s$^{-1}$ and a reported Reynolds number of 95,500. The ODT simulations use this diameter and velocity with a kinematic viscosity of $1.534\cdot10^{-5}$ m$^2$s$^{-1}$, resulting in a Reynolds number of 93,056. The initial velocity profile in the ODT simulations is a modified top-hat profile in which a hyperbolic tangent function of width $\delta$ = 0.1D is used on either side of the jet to smooth the transition between the jet and the free stream. In the spatial formulation of ODT, the streamwise velocity must be positive everywhere on the line, so a small minimum velocity of $v_{min} = 0.1$m$\cdot$s$^{-1}$ is specified and added across the entire velocity profile.
-
-ODT simulations were performed with parameters $C = 5.25$, $\beta_{LES} = 3.5$, and $Z=400$. The value of $Z$ is the same as the spatial simulations in \cite{Monson_2016}, and the values of $C$ and $\beta_{LES}$ were adjusted to give good agreement with the experimental data. Note the close agreement of the $C$ and $Z$ parameters here to the optimal values used for the pipe flow simulations ($C = 5$ and $Z = 350$). This illustrates a level of robustness in the ODT parameters and suggests that intermediate values could be successfully applied in both configurations. 
-
-1024 independent ODT realizations were performed and results were ensemble averaged. All quantities are normalized consistent with jet similarity scaling. Downstream locations are normalized by the jet diameter $D$, and radial locations are normalized by $(y-y_0)$, where $y$ is the downstream location and $y_0 = 4D$ is the virtual origin used in \cite{Hussein_1994}. 
-
-RESULTS AND PLOTS GO HERE
-
-%In the figure, $v_0$ is the jet exit velocity and $v_{cL}$ is the local mean axial centerline velocity. Here, $r$ is used to denote both the experimental radial location and the ODT line position $x$.
-
-%It is worth noting that the vrms profile depends somewhat on the ODT parameters selected. Hewson and Kerstein [15] demonstrated that mean centerline values of mixture fraction were insensitive to C and βles provided their ratio was kept constant. In these simulations, however, higher values of RMS fluctuations were observed at lower values of βles. Figure 9 shows results for TMA similar to those in Fig. 8 with varying C and βles. Each of the three cases has C/βles = 2, with C = 7, 5, and 3. Plots (b) and (c) show axial location
-
-%The centerline velocity decay and radial profiles show good agreement, as with the previous cases, with a slight improvement in the radial velocity profile. The vrms profiles are significantly improved along the centerline compared to TMA and TMB. The centerline anomaly is not completely removed, however, since implemented eddies are still subject to the geometric distortion of the TMB map, whose influence is felt by the τ−1 calculation for subsequent eddy events. e
-
-
-\subsection{Jet Flame}
-\label{sub:jetflame}
-
-% TEXT COPIED FROM CYLINDRICAL ODT PAPER
 ODT is uniquely suited for reacting flow simulations. Here, we present illustrative ODT simulation results of a round, turbulent jet flame based on and compared to the experimental DLR-A flame of Meier et al. \cite{Meier_2000}. This canonical flame configuration has been used extensively to study and validate turbulent combustion models \cite{Pitsch_2000,Lindstedt_2005,Wang_2011,Fairweather_2004,Lee_2008,Lee_2009}. 
 
 The DLR-A fuel stream is mixture of 22.1\% CH$_4$, 33.2\% H$_2$, and 44.7\% N$_2$ (by volume) that issues into dry air via a nozzle with an inner diameter of 8 mm at a mean exit velocity of 42.2 m$\cdot$s$^{-1}$. The coflow air stream issues from a concentric nozzle 140 mm in diameter at a velocity of 0.3 m$\cdot$s$^{-1}$. The reported jet Reynolds number is 15,200.
@@ -345,7 +343,19 @@ These assumptions are not reasonable for the DLR-A flame, but they allow us to i
 
 This simulation uses ODT parameters $C=20$, $\beta_{LES}=17$, and $Z=400$. The values of $C$ and $\beta_{LES}$ were adjusted to give good agreement with the experimental data, and the value of $Z$ is the same as it was for the non-reacting jet in Section \ref{sub:nonreactingjet}. 1024 independent flow realizations were performed in parallel and the results ensemble averaged. Downstream distance $y$ and radial position $r$ are normalized by the jet diameter $D$.
 
-RESULTS AND PLOTS GO HERE
+\begin{figure}
+	\begin{center}
+		\begin{tabular}{ccc}
+			(a) & (b) & (c) \\
+			\includegraphics[width=2in]{../figures/cl_uvel_DLR_test_11.pdf} &
+			\includegraphics[width=2in]{../figures/cl_mixf_DLR_test_11.pdf} &
+			\includegraphics[width=2in]{../figures/cl_temp_DLR_test_11.pdf}
+		\end{tabular}
+	\end{center}
+\caption{DLR jet flame example case results}
+\end{figure}
+
+
 
 To replicate this example case, build the code with the \texttt{CHEMISTRY = SIMPLEDLR} flag in the \texttt{user\textunderscore config} file and edit the desired run script with \texttt{inputDir = "../input/jetFlame/DLR\textunderscore A"} and a new case name such as \texttt{caseName = "jetFlame\textunderscore example"}. The input file for this case, located at \texttt{ODT/input/jetFlame/DLR\textunderscore A/input.yaml}, already contains the appropriate parameters and does not need to be modified to match this example case. POST PROCESSING INSTRUCTIONS GO HERE.
 
