@@ -332,16 +332,17 @@ ODT is uniquely suited for reacting flow simulations. Here, we present illustrat
 
 The DLR-A fuel stream is mixture of 22.1\% CH$_4$, 33.2\% H$_2$, and 44.7\% N$_2$ (by volume) that issues into dry air via a nozzle with an inner diameter of 8 mm at a mean exit velocity of 42.2 m$\cdot$s$^{-1}$. The coflow air stream issues from a concentric nozzle 140 mm in diameter at a velocity of 0.3 m$\cdot$s$^{-1}$. The reported jet Reynolds number is 15,200.
 
-Previous ODT studies of turbulent jet flames have used the temporal planar formulation, but the spatial cylindrical formulation developed recently \cite{Lignell_2018} more closely matches the experimental configuration. This simulation uses the experimentally reported velocity profiles and jet dimensions.  In the non-reacting case, a small minimum velocity was added uniformly to the velocity profile; no such addition is required here because of the slow-moving coflow air stream that issues alongside the reacting jet. 
+Previous ODT studies of turbulent jet flames have used the temporal planar formulation, but the spatial cylindrical formulation developed recently \cite{Lignell_2018} more closely matches the experimental configuration. This simulation uses the experimentally reported velocity profiles and jet dimensions.  
+%In the non-reacting case, a small minimum velocity was added uniformly to the velocity profile; no such addition is required here because of the slow-moving coflow air stream that issues alongside the reacting jet. 
 %The ODT simulation includes the buoyant source term but not the streamwise pressure gradient in Eq. (25). 
 The fuel was diluted with N$_2$ in the experimental flame to minimize radiative heat losses, and radiation is ignored in the simulation. This flame has a low Reynolds number, and the combustion chemistry proceeds quickly. The ODT simulation transports the chemical species O$_2$, N$_2$, CH$_4$, H$_2$, H$_2$O, and CO$_2$. We assume that reactions proceed to the products of complete combustion and apply simple, fast reaction rates according to the following chemical equations:
 \begin{align}
 	\mathrm{CH}_4 + 2\mathrm{O}_2 & \rightarrow \mathrm{CO}_2 + 2\mathrm{H}_2\mathrm{O}, \\
 	\mathrm{H}_2+\frac{1}{2}\mathrm{O}_2 & \rightarrow \mathrm{H}_2\mathrm{O}.
 \end{align}
-These assumptions are not reasonable for the DLR-A flame, but they allow us to illustrate ODT in a reacting jet configuration with variable properties and heat release, which is the primary purpose of this example case. More complex combustion reaction mechanisms are available within the source code and can be accessed by changing the appropriate input file parameter. 
+These assumptions are not reasonable for the DLR-A flame, but they allow us to illustrate ODT in a reacting jet configuration with variable properties and heat release. More complex combustion reaction mechanisms are available within the source code and can be accessed by changing the appropriate input file parameters. 
 
-This simulation uses ODT parameters $C=20$, $\beta_{LES}=17$, and $Z=400$. The values of $C$ and $\beta_{LES}$ were adjusted to give good agreement with the experimental data, and the value of $Z$ is the same as it was for the non-reacting jet in Section \ref{sub:nonreactingjet}. 1024 independent flow realizations were performed in parallel and the results ensemble averaged. Downstream distance $y$ and radial position $r$ are normalized by the jet diameter $D$.
+This simulation uses ODT parameters $C=20$, $\beta_{LES}=17$, and $Z=400$. The values of $C$ and $\beta_{LES}$ were adjusted to give good agreement with the experimental data, and the value of $Z$ is the same as the spatial simulations in \cite{Monson_2016}. 1024 independent flow realizations were performed in parallel and the results ensemble averaged. Downstream distance $y$ and radial position $r$ are normalized by the jet diameter $D$.
 
 \begin{figure}
 	\begin{center}
@@ -352,12 +353,13 @@ This simulation uses ODT parameters $C=20$, $\beta_{LES}=17$, and $Z=400$. The v
 			\includegraphics[width=2in]{../figures/cl_temp_DLR_test_11.pdf}
 		\end{tabular}
 	\end{center}
-\caption{DLR jet flame example case results}
+	\label{fig:dlr_example_results}
+	\caption{DLR jet flame example case results: (a) mean axial velocity and RMS velocity along the centerline versus downstream location; (b) mean axial mixture fraction and RMS mixture fraction along the centerline versus downstream location; (c) mean axial temperature (K) and RMS temperature (K) along the centerline versus downstream location.}
 \end{figure}
 
+Figure~\ref{fig:dlr_example_results} displays the simulation results: axial mean and centerline values for (a) axial velocity $v$, (b) mixture fraction $\xi$, and (c) temperature $T$. The ODT results track the experimental data well for all three variables. The centerline temperature peaks about 100 K above the experimental data, but this small difference can be attributed to thermal radiation (which was neglected in this simulation) and the assumption that reactions proceed to the products of complete combustion rather than their equilibrium state. The centerline velocity shows a fast initial decrease that can be attributed to diffusion. Similarly, the increase in centerline velocity RMS values is delayed; this occurs due to the elapsed time model for large eddy suppression, which limits disturbances in the early stages of the flow to small eddies that occur on the jet edges away from the centerline. 
 
-
-To replicate this example case, build the code with the \texttt{CHEMISTRY = SIMPLEDLR} flag in the \texttt{user\textunderscore config} file and edit the desired run script with \texttt{inputDir = "../input/jetFlame/DLR\textunderscore A"} and a new case name such as \texttt{caseName = "jetFlame\textunderscore example"}. The input file for this case, located at \texttt{ODT/input/jetFlame/DLR\textunderscore A/input.yaml}, already contains the appropriate parameters and does not need to be modified to match this example case. POST PROCESSING INSTRUCTIONS GO HERE.
+To replicate this example case, build the code with the \texttt{CHEMISTRY = SIMPLEDLR} flag in the \texttt{user\textunderscore config} file and edit the desired run script with \texttt{inputDir = "../input/jetFlame/DLR\textunderscore A"} and a new case name such as \texttt{caseName = "jetFlame\textunderscore example"}. The input file for this case, located at \texttt{ODT/input/jetFlame/DLR\textunderscore A/input.yaml}, already contains the appropriate parameters and does not need to be modified to match this example case. Please see the code documentation for data post-processing instructions.
 
 %Present the major functionalities of the software. 
 %\begin{itemize}
