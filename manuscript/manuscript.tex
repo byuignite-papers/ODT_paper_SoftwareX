@@ -187,13 +187,13 @@ Here, $j_{\beta}$ is the diffusion flux of scalar $\beta$ across the cell face a
 
 Eddy events occur as a Poisson process in accordance with their eddy rates, where a given eddy event of size $l$ and location $x_0$ has an eddy timescale $t$ and an associated eddy rate $1/t$. Three user-defined ODT parameters control the eddy event process: the eddy rate parameter $C$ scales the rate of occurrence of the eddies; the viscous penalty parameter $Z$ suppresses small eddies; and the large eddy suppression parameter $\beta_{LES}$ constrains eddies to those with timescales proportional to the elapsed simulation time. Sampled eddies that do not fit the defined parameters are rejected and not applied to the domain.
 
-Eddy events modify domain variables using ``triplet maps", as illustrated for a cylindrical domain in Figure~\ref{fig:tripletmap}. In an eddy region of size $l$, transported property profiles are modified (mapped) by making three copies, compressing each spatially by a factor of three, then lining these up with the middle copy spatially reversed.
+Eddy events modify domain variables using ``triplet maps", as illustrated in Figure~\ref{fig:tripletmap}. In an eddy region of size $l$, transported property profiles are modified (mapped) by making three copies, compressing each spatially by a factor of three, then lining these up with the middle copy spatially reversed.
 This map is continuous and conservers all quantities and statistical moments, increases scalar gradients and decreases length scales consistent with turbulent eddies in real flows. Subsequent eddies in the same region will result in a cascade of scales. The eddy rates, used in the sampling and selection of eddies depend on eddy size and the local kinetic energy consistent with turbulent scaling laws.  
 
 \begin{figure}
 	\centering
-	\includegraphics[width=\textwidth]{../figures/tripletmap/tripletmap.png} 
-	\caption{Schematic diagram of a cylindrical triplet map, adapted from~\cite{Lignell_2018}. Before the triplet map, the domain contains three grid cells of equal volume, while after the triplet map has been applied, the domain contains nine cells. The nine final cells are labeled according to the cells from which they originated and shaded to indicate that three map images were combined to create the final composite.}
+	\includegraphics[width=\textwidth]{../figures/tripletmap/tripmap.pdf} 
+    \caption{Schematic diagram of a triplet map. From left to right: (first pane) simulation of a single ``eddy", a two-dimensional Kelvin-Helmholz instability with a vertical white line-of-sight; (second pane) mixture fraction profile along the indicated line-of-sight before and after the eddy showing increased gradients and surface area; (third pane) a triplet map operates on a profile to produce a mapped profile with three copies, compressed and lined up, with the middle copy spatially inverted; (fourth pane) illustrative eddy event sizes and locations with corresponding temperature profile for a single ODT realization of a wall fire, adapted from \cite{Monson_2016}.}
 	\label{fig:tripletmap}
 \end{figure}
 
