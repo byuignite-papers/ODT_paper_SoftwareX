@@ -207,7 +207,7 @@ The ODT package consists primarily of an object-oriented C++ code responsible fo
 
 \begin{figure}
 	\centering
-	\includegraphics[width=\textwidth]{../figures/odt_flow_chart/odt_flow_chart.png} 
+	\includegraphics[width=\textwidth]{../figures/odt_flow_chart.pdf} 
 	\caption{Structural outline of the ODT code, including its major class objects. For brevity, this diagram makes two simplifications. First, it assumes that diffusive advancement in the \texttt{micromixer} uses an explicit solution method; in practice, users specify either an explicit, semi-implicit, or Strang split method. Second, it implies that all of the eddy events sampled by the \texttt{eddy} object are applied to the domain; in reality, eddy events are filtered through several rejection tests (omitted from this figure for clarity) before acceptance and application to the domain.}
 	\label{fig:flowchart}
 \end{figure}
@@ -282,7 +282,7 @@ For a given simulation, data is output to the \texttt{data} directory, which con
 
 \begin{figure}
 	\centering
-	\includegraphics[width=\textwidth]{../figures/data_folder_structure/data_folder_structure.png} 
+	\includegraphics[width=\textwidth]{../figures/data_folder_structure.pdf} 
 	\caption{Data folder structure and file locations. Boxes indicate folders and ovals indicate files. For a given simulation, \texttt{caseName} will be replaced with the case name specified in the run script. The number attached to \texttt{caseName} folder names and to \texttt{runtime} data files indicates the realization number. The number attached to \texttt{dmp} files indicates the output time step, or ``dump" time, of the data file. These correspond to the order of the time steps listed in \texttt{input.yaml}.}
 	\label{fig:data_folder_structure}
 \end{figure}
