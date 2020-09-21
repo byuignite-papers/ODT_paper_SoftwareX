@@ -383,46 +383,51 @@ To replicate this example case, build the code with the \texttt{CHEMISTRY = SIMP
 \section{Impact}
 \label{sec:impact}
 
-Questions to answer in this section (from SoftwareX template)
-\begin{enumerate}
-	\item How can new research questions be pursued with this software?
-		\begin{itemize}
-			\item possibility of parametric studies (much harder with DNS/LES/RANS)
-			\item study of late-flame soot and radiation interactions, soot emissions as smoke
-			\item comparative radiation model studies?
-		\end{itemize}
-	\item How does the software improve pursuit of existing research questions?
-		\begin{itemize}
-			\item late-flame behavior becomes easier to study
-			\item validation of LES subgrid models
-			\item soot stuff, especially late in the flame (because soot moves slowly compared to gas species and therefore short simulation times like in DNS aren't enough to study it effectively)
-		\end{itemize}
-	\item How does the software change the daily practice of its users?
-		\begin{itemize}
-			\item cases take hours or days rather than weeks using supercomputer resources
-			\item test cases can be run on local computers (unlike something like DNS) and as background tasks without disrupting other tasks
-			\item ODT as a tool complements other approaches, can cover blind spots and be used in validation
-		\end{itemize}
-	\item How widespread is the software? Who uses it? (Within and outside of intended research area and/or group.)
-		\begin{itemize}
-			\item BYU group
-			\item JCH at Sandia
-			\item Chalmers group in Sweden (Marco Fistler, etc.)
-			\item German university group (Heiko Schmidt, Juan Media, Marten Klein, etc.)
-			\item TO DO: find other groups who have used or currently use ODT
-		\end{itemize}
-	\item How is the software used in commercial settings (if any)? Has it led to creation of spin-off companies?
-		\begin{itemize}
-			\item No commercial use (I think). 
-		\end{itemize}
-\end{enumerate}
+The ODT model formulation is somewhat complex and is difficult to cleanly separate from its implementation. For instance, while the triplet map can be represented mathmatically, it is usually implemented as we described previously. That description assumed an adaptive grid with variable cell sizes. Alternative formulations are used for fixed grids. Furthermore, the model itself is complex and difficult to implement. These challenges present barriers for practitioners who wish to use the model. The code presented aims to reduce these barriers by providing an open-source, well-documented code that can be used directly, or modified to suit particular research aims. New research questions that could be persued include soot-flame-radiation-chemsitry interactions, multi-phase reacting flows (such as diesel sprays) using Lagrangian particles, and coupled near-wall heat and momentum transfer, to name a few. The code presented has been demonstrated to be extensible to such systems. These extensions are facilitated by the object-oriented structure, including the domain variables. For example, the code has be extended to solve steady laminar flamelets \cite{Peters_1984}, requiring inheritance from the \textt{solver}, \texttt{micromixer}, and \texttt{dv} (domain variable) classes.
+
+The structure of the ODT code, using an adaptive mesh, and a Lagrangian formulation for diffusive advancement of transport equations has several advantages. These include simplicity of formulation, and computational efficiency. The adaptive mesh minimizes the number of computational cells required, and can be adapted on any variable of interested. (Older versions of the code even made use of multiple coupled computational grids for different scalars.) This is especially important for flows with complex and expensive chemistry, and flows with widely varying resolution demands (such as near-wall flows). The Lagrangian formulation, implies that cell faces move with fluid velocity (such as is present during, e.g., flame expansion). This treatment is inherently stable, removing the need for complex (and diffusive) hyberbolic conservation law treatements and their associated CFL constraints. The conservation equations, as in Eq. (\ref{eq:transport}), are similarly simplified.
+
+The code has been run on Linux, Mac, and Windows machines, including on parallel clusters of up to 512 processor cores. Several research groups have used the code and contributed to its development. These include groups at Sandia National Laboratories, Brandenburg University of Technology Cottbus-Senftenberg, Chalmers University, and Combustion Science and Engineering, Inc. The latter company is the only one known to use the code in a commercial setting, though use was on a combustion research project. 
+
+%Questions to answer in this section (from SoftwareX template)
+%\begin{enumerate}
+%	\item How can new research questions be pursued with this software?
+%		\begin{itemize}
+%			\item possibility of parametric studies (much harder with DNS/LES/RANS)
+%			\item study of late-flame soot and radiation interactions, soot emissions as smoke
+%			\item comparative radiation model studies?
+%		\end{itemize}
+%	\item How does the software improve pursuit of existing research questions?
+%		\begin{itemize}
+%			\item late-flame behavior becomes easier to study
+%			\item validation of LES subgrid models
+%			\item soot stuff, especially late in the flame (because soot moves slowly compared to gas species and therefore short simulation times like in DNS aren't enough to study it effectively)
+%		\end{itemize}
+%	\item How does the software change the daily practice of its users?
+%		\begin{itemize}
+%			\item cases take hours or days rather than weeks using supercomputer resources
+%			\item test cases can be run on local computers (unlike something like DNS) and as background tasks without disrupting other tasks
+%			\item ODT as a tool complements other approaches, can cover blind spots and be used in validation
+%		\end{itemize}
+%	\item How widespread is the software? Who uses it? (Within and outside of intended research area and/or group.)
+%		\begin{itemize}
+%			\item BYU group
+%			\item JCH at Sandia
+%			\item Chalmers group in Sweden (Marco Fistler, etc.)
+%			\item German university group (Heiko Schmidt, Juan Media, Marten Klein, etc.)
+%			\item TO DO: find other groups who have used or currently use ODT
+%		\end{itemize}
+%	\item How is the software used in commercial settings (if any)? Has it led to creation of spin-off companies?
+%		\begin{itemize}
+%			\item No commercial use (I think). 
+%		\end{itemize}
+%\end{enumerate}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion}
 \label{sec:conclusion}
 
-Write this part next to last
-%Set out the conclusion of this original software publication.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conflict of Interest}
