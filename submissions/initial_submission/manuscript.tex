@@ -1,0 +1,738 @@
+%% 
+%% Copyright 2007, 2008, 2009 Elsevier Ltd
+%% 
+%% This file is part of the 'Elsarticle Bundle'.
+%% ---------------------------------------------
+%% 
+%% It may be distributed under the conditions of the LaTeX Project Public
+%% License, either version 1.2 of this license or (at your option) any
+%% later version.  The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.2 or later is part of all distributions of LaTeX
+%% version 1999/12/01 or later.
+%% 
+%% The list of all files belonging to the 'Elsarticle Bundle' is
+%% given in the file `manifest.txt'.
+%% 
+
+%% Template article for Elsevier's document class `elsarticle'
+%% with numbered style bibliographic references
+%% SP 2008/03/01
+
+\documentclass[preprint,12pt, a4paper]{elsarticle}
+
+%% Use the option review to obtain double line spacing
+%% \documentclass[authoryear,preprint,review,12pt]{elsarticle}
+
+%% For including figures, graphicx.sty has been loaded in
+%% elsarticle.cls. If you prefer to use the old commands
+%% please give \usepackage{epsfig}
+
+%% The amssymb package provides various useful mathematical symbols
+\usepackage{amssymb}
+\usepackage{amsmath}
+%% The amsthm package provides extended theorem environments
+%% \usepackage{amsthm}
+
+%% The lineno packages adds line numbers. Start line numbering with
+%% \begin{linenumbers}, end it with \end{linenumbers}. Or switch it on
+%% for the whole article with \linenumbers.
+\usepackage{lineno}
+
+\usepackage{float}
+\restylefloat{table}
+
+\usepackage{hyperref}
+
+\journal{SoftwareX}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frontmatter}
+
+%% Title, authors and addresses
+
+%% use the tnoteref command within \title for footnotes;
+%% use the tnotetext command for theassociated footnote;
+%% use the fnref command within \author or \address for footnotes;
+%% use the fntext command for theassociated footnote;
+%% use the corref command within \author for corresponding author footnotes;
+%% use the cortext command for theassociated footnote;
+%% use the ead command for the email address,
+%% and the form \ead[url] for the home page:
+%% \title{Title\tnoteref{label1}}
+%% \tnotetext[label1]{}
+%% \author{Name\corref{cor1}\fnref{label2}}
+%% \ead{email address}
+%% \ead[url]{home page}
+%% \fntext[label2]{}
+%% \cortext[cor1]{}
+%% \address{Address\fnref{label3}}
+%% \fntext[label3]{}
+
+\title{One-dimensional turbulence (ODT): computationally efficient modeling and simulation of turbulent  flows}
+
+%% use optional labels to link authors explicitly to addresses:
+%% \author[label1,label2]{}
+%% \address[label1]{}
+%% \address[label2]{}
+
+%\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\author{Victoria B. Stephens}
+\author{David O. Lignell\corref{cor1}}
+
+\cortext[cor1]{Corresponding author. \ead{davidlignell@byu.edu}}
+
+\address{Chemical Engineering Department, Brigham Young University, Provo, UT 84602, USA}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}
+%
+One-dimensional turbulence (ODT) is an accurate and computationally efficient technique for modeling turbulent flows. ODT has been applied to a wide range of flow problems including reaction, multiphase, differential diffusion, heat release, buoyancy, and wall flows. Applications include use as a standalone model and as a closure for large-eddy simulation (LES). Its strength lies in the ability to capture a full range of turbulent length and time scales. The ODT model is strongly coupled with its implementation, complicating its formulations. We present a modern, open-source, object-oriented C++ implementation of ODT. This code can be used as a starting point to understand, apply, and extend the ODT model, enabling its further application to turbulent flow research.
+%
+\end{abstract}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{keyword}
+%% keywords here, in the form: keyword \sep keyword
+turbulence \sep reacting flows \sep one-dimensional turbulence
+
+\end{keyword}
+
+\end{frontmatter}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Code Metadata}
+\label{metadata}
+
+\begin{table}[H]
+\begin{tabular}{|l|p{6.5cm}|p{6.5cm}|}
+\hline
+\textbf{Nr.} & \textbf{Code metadata description} & \textbf{Please fill in this column} \\
+\hline
+C1 & Current code version & 1.0 \\
+\hline
+C2 & Permanent link to code/repository used for this code version & \href{https://github.com/BYUignite/ODT}{https://github.com/BYUignite/ODT} \\
+\hline
+C3 & Code Ocean compute capsule & N/A\\
+\hline
+C4 & Legal Code License   & MIT \\
+\hline
+C5 & Code versioning system used & Git \\
+\hline
+C6 & Software code languages, tools, and services used & C++, Python 3.x, YAML,  \\
+\hline
+C7 & Compilation requirements, operating environments \& dependencies & CMake 3.12+, Cantera, Git, Doxygen (optional) \\
+\hline
+C8 & If available Link to developer documentation/manual & \href{https://github.com/BYUignite/ODT}{ODT style guide} \\
+\hline
+C9 & Support email for questions & davidlignell@byu.edu \\
+\hline
+\end{tabular}
+\caption{Code metadata (mandatory)}
+\end{table}
+
+\linenumbers
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Motivation and significance}
+\label{sec:motivation}
+
+Turbulent flows characterize the vast majority of fluid flows in practical engineering applications, and simulations of turbulent flows provide researchers with valuable insights into complex systems, particularly reacting turbulent flows such as combustion processes. Turbulence is a complex phenomenon that affects the full range of a flow's length and time scales. As a result, resolving the entire flow field by numerically solving the Navier-Stokes equations of fluid flow, as is done in direct numerical simulations (DNS), requires substantial computational resources. DNS is a powerful research tool, but its high computational cost makes it intractable for simulating most practical engineering flows. In order to achieve numerical solutions to practical flow problems, researchers use alternative frameworks that model turbulence rather than resolving it directly.
+
+Large-eddy simulations (LES) address the problem of wide-ranging length and time scales by combining  direct resolution of grid-scale quantities, as in DNS, with subgrid modeling of smaller turbulence structures. The more complex the flow, the more modeling is required; for example, a jet flame simulation might require subgrid modeling for the combustion chemistry, radiative heat transfer, and soot chemistry in addition to turbulence structures, all of which form a tightly coupled system in which each model interacts heavily with the others. While subgrid modeling makes LES more computationally affordable than DNS, it can introduce empiricism into simulations, which can lead to inaccurate results. Additionally, unresolved quantities are often parameterized in state space with empirical relationships or assumed distributions that lack universal applicability. LES is a valuable simulation tool, but its approach to turbulence modeling can introduce unwanted empiricism and make errors difficult to isolate and quantify.
+
+The one-dimensional turbulence model (ODT) functionally reverses the LES approach, modeling large-scale turbulent advection and directly resolving small-scale flow structures, simulating the full range of length and time scales in a single dimension. Depending on the configuration, large-scale structures can be easier to model than small-scale structures, especially in reacting flows. ODT's direct resolution of fine scales in one dimension bypasses subgrid modeling issues that complicate LES. Previous studies show that ODT can attain accuracy comparable to DNS at a fraction of the computational cost \cite{Lignell_2015,Abboud_2015}, making it an attractive tool for simulating turbulent flows. Because the ODT model is one-dimensional, it is limited to homogeneous or boundary-layer flows, such as jets, wakes, and mixing layers, but these types of flows are common in nature and central to turbulence research. ODT's computational efficiency and resolution of a full range of scales make it a valuable tool that complements experimental studies and other simulation tools like DNS and LES. 
+
+Early applications of ODT focused on homogeneous turbulence, wakes, and mixing layers \cite{Kerstein_1999,Kerstein_2000,Kerstein_2001}. Later extension to variable-density flows and a spatial downstream coordinate system facilitated its growth and application to more complex flows, including combustion in jet flames \cite{Echekki_2001,Hewson_2001,Hewson_2002,Lignell_2012,Punati_2011,Abdelsamie_2017,Lignell_2017, Goshayeshi_2015}, counterflow flames \cite{Jozefik_2015}, wall fires \cite{Monson_2016}, and sooting flames \cite{Lignell_2015,Hewson_2006,Hewson_2009,Lignell_2015b,Ricks_2010}, as well as other particle flows \cite{Sun_2017,Schmidt_2009,Sun_2014,Fistler_2017}. ODT has also served to complement LES through subgrid modeling studies \cite{Cao_2008,Schmidt_2003,Schmidt_2010} and has been applied to various other flow configurations such as double-diffusive interfaces \cite{GonzalezJuez_2011}, Rayleigh-Taylor mixing \cite{GonzalezJuez_2013}, and stratified turbulence \cite{Wunsch_2001}. Most recently, the ODT code was extended to include cylindrical and spherical coordinate systems \cite{Lignell_2018,Klein_2018,Klein_2019}.
+
+During the recent implementation of the cylindrical and spherical model formulations, the ODT code was drastically overhauled and reorganized, resulting in its current configuration. The ODT code presented here is a pared down version of the development code, representing the fundamental aspects of the ODT model and its most reliable functions. The example case in Section~\ref{sec:examples} is a representative sample of the ODT code's capabilities as it is presented here. Future releases will expand this code's functionality with additional features currently in development. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Software description}
+\label{sec:description}
+
+\subsection{Model description}
+\label{sub:model_description}
+
+The ODT model is described in detail in the literature~\cite{Kerstein_1999,Kerstein_2001,Ashurst_2005,Lignell_2018,Lignell_2013}; only a brief explanation will be given here. In ODT, turbulent advection is modeled with stochastic processes called eddy events, which punctuate the solution of unsteady, one-dimensional transport equations for mass, momentum, and enthalpy. The ODT code uses a Lagrangian finite-volume formulation for diffusive advancement in which mass stays constant within each grid cell while cell volumes increase or decrease according to cell dilation via an adaptive mesh refinement~\cite{Lignell_2013}.
+
+Transport equations for mass, momentum, and enthalpy in the temporal formulation of ODT take the following generic form, derived from the Reynolds Transport Theorem~\cite{Cengel_2010} for a given scalar quantity per unit mass $\beta$: 
+\begin{equation} 
+\label{eq:transport}
+	\frac{\mathrm{d}\beta}{\mathrm{d}t} = -\frac{j_{\beta,e}A_{x,e}-j_{\beta,w}A_{x,w}}{\rho V} + \frac{S_{\beta}}{\rho V}.
+\end{equation}
+Here, $j_{\beta}$ is the diffusion flux of scalar $\beta$ across the cell face area $A_x$ where the subscripts $e$ and $w$ refer to the ``east" and ``west" faces of a given grid cell, respectively. $S_{\beta}$ is the Lagrangian source term derived from the conservation law for $\beta$, $\rho$ represents mass density, and $V$ represents cell volume. In practice, we refer to the left hand term on the right side of Equation~\ref{eq:transport} as the ``mixing term" and the right hand term on the right side of Equation~\ref{eq:transport} as the ``source term". The generic transport equation differs slightly in the spatial formulation of ODT, but its form is similar, so we omit it here for brevity. The system of ordinary differential equations (ODEs) that results is well behaved at all grid points and in all geometries in their finite-volume forms. For details on transport equation derivation and use in both the temporal and spatial formulations of ODT, see~\cite{Lignell_2018}. 
+
+Eddy events occur as a Poisson process in accordance with their eddy rates, where a given eddy event of size $l$ and location $x_0$ has an eddy timescale $t$ and an associated eddy rate $1/t$. Three user-defined ODT parameters control the eddy event process: the eddy rate parameter $C$ scales the rate of occurrence of the eddies; the viscous penalty parameter $Z$ suppresses small eddies; and the large eddy suppression parameter $\beta_{LES}$ constrains eddies to those with timescales proportional to the elapsed simulation time. Sampled eddies that do not fit the defined parameters are rejected and not applied to the domain.
+
+Eddy events modify domain variables using ``triplet maps", as illustrated in Figure~\ref{fig:tripletmap}. In an eddy region of size $l$, transported property profiles are modified (mapped) by making three copies, compressing each spatially by a factor of three, and realigning them with the middle copy spatially reversed. This map is continuous, conserves all quantities and statistical moments, increases scalar gradients, and decreases length scales consistent with turbulent eddies in real flows. Subsequent eddies in the same region will result in a cascade of scales. The eddy rates, used to sample and select eddy events, depend on eddy size and the local kinetic energy consistent with turbulent scaling laws.  
+
+\begin{figure}
+		\begin{tabular}{llll}
+			\hspace{40pt}(a) & \hspace{100pt} (b) & \hspace{70pt} (c) & \hspace{50pt}(d) 
+		\end{tabular}
+	\begin{center}
+		\begin{tabular}{c}
+            \includegraphics[width=\textwidth]{fig_tripmap.pdf} 
+		\end{tabular}
+	\end{center}
+    \caption{Schematic diagram of a triplet map. From left to right: (a) simulation of a single ``eddy", a two-dimensional Kelvin-Helmholtz instability with a vertical white line-of-sight; (b) mixture fraction profile along the indicated line-of-sight before and after the eddy showing increased gradients and surface area; (c) a triplet map operates on a profile to produce a mapped profile with three copies, compressed and lined up, with the middle copy spatially inverted; (d) illustrative eddy event sizes and locations with corresponding temperature profile for a single ODT realization of a wall fire, adapted from \cite{Monson_2016}.}
+\label{fig:tripletmap}
+\end{figure}
+
+Eddy events occur concurrently with diffusive advancement via solution of the system of unsteady one-dimensional transport equations. In this way, the ODT code marches in time or space until it reaches the simulation end point. Due to the stochastic nature of eddy events, each ODT simulation, or realization, is different, even when it is provided with the same input parameters. In order to obtain statistically stable data for a given set of parameters, we run many realizations with the same input parameters and then gather statistics over these realizations. This is done via post-processing tools, which are provided in the ODT package. 
+
+%-----------------------------------------------------------------------------------
+\subsection{Software Architecture}
+\label{sub:architecture}
+
+The ODT package consists primarily of an object-oriented C++ code responsible for running flow simulation cases and generating data. The package also contains auxiliary data processing and visualization tools, written mostly in Python. The post-processing tools are case-specific but will be  addressed generally in Section~\ref{sub:workflow}. 
+
+\begin{figure}
+	\begin{center}
+        \includegraphics[width=\textwidth]{fig_odt_flow_chart.pdf}
+	\end{center}
+	\caption{Structural outline of the ODT code, including its major class objects. For brevity, this diagram makes two simplifications. First, it assumes that diffusive advancement in the \texttt{micromixer} uses an explicit solution method; in practice, users specify either an explicit, semi-implicit, or Strang split method. Second, it implies that all of the eddy events sampled by the \texttt{eddy} object are applied to the domain; in reality, eddy events are filtered through several rejection tests (omitted from this figure for clarity) before acceptance and application to the domain.}
+\label{fig:flowchart}
+\end{figure}
+
+Figure~\ref{fig:flowchart} illustrates the ODT code's most important objects and structural features. User inputs are provided to the executable in YAML \cite{Beder_2008} format via \texttt{input.yaml}; the location of the specific \texttt{input.yaml} file to be used is determined by the case name and case type specified in the run script. The \texttt{main} function defines storage for the main objects, but, once created, the \texttt{domain} object is responsible for object initialization as well as variable initialization and storage via a case-specific \texttt{domaincase} object. 
+
+Three primary objects handle the code's main functions: the \texttt{solver}, \texttt{micromixer}, and \texttt{eddy} objects. The \texttt{solver} coordinates the ODT solution process, marching along the simulation time and invoking diffusive advancement and eddy events. The \texttt{micromixer} handles diffusive advancement by setting step sizes, interacting with the transported domain variables, and solving the system of ODEs defined by Equation~\ref{eq:transport} (or its equivalent in the spatial formulation). The \texttt{micromixer} includes three solution methods that can be specified in \texttt{input.yaml}: a first-order explicit Euler method (pictured in Figure~\ref{fig:flowchart}), a first-order semi-implicit method, and a second order Strang splitting method~\cite{Strang_1968}. The latter two methods are useful for treating stiff chemistry, with source terms integrated using CVODE~\cite{Hindmarsh_2020}. In reacting flow cases, enthalpy and chemical species mass fractions are transported, and physical properties and kinetic rates are computed with Cantera~\cite{Goodwin_2018}. The \texttt{micromixer} is also the code's primary point of interaction with the \texttt{mesher} object (not pictured in Figure~\ref{fig:flowchart}), which manages the adaptive grid functions. Finally, the \texttt{eddy} object manages eddy event selection and implementation, which proceeds as described in Section~\ref{sub:model_description}.  
+
+%-----------------------------------------------------------------------------------
+\subsection{Workflow}
+\label{sub:workflow}
+
+This section outlines the process a user goes through in order to successfully build the ODT code and run a simulation. ODT is a standalone, self-contained package, and users interact with its files primarily via the command line rather than a graphical interface. For more details, please see the package documentation.
+
+Within the main download package, several directories organize the ODT code. The \texttt{source}, \texttt{build}, and \texttt{run} directories contain the ODT source code, compilation tools, and run scripts, respectively. The \texttt{input} directory contains subdirectories corresponding to several possible case types, each populated with the appropriate input files. The \texttt{data} directory, initially empty, holds the raw data files and runtime information generated by ODT, as well as post-processed data files generated from within the \texttt{post} directory. Finally, the \texttt{docs} directory contains documentation optionally generated by Doxygen \cite{vanHeesch_2018} during the build process. 
+
+\subsubsection{Building ODT}
+
+The ODT build process is automated with CMake. The user navigates to the \texttt{build} directory and edits the CMake configuration file. The CMake configuration file specifies Cantera's location and must be changed to reflect the local installation location. For reacting flows, the chemical reaction rates can be computed by Cantera (default), or a from a user-specified function, specified at compile time. Once the configuration settings are updated, the user runs CMake to apply the changes. 
+
+YAML is required in order to process input files. If it has not yet been installed, it must be built and installed at this point. For convenience, the ODT package automates this process. YAML need only be installed once for a given instance of the ODT package. Rebuilding the ODT code with CMake does not affect the YAML installation. 
+
+Once CMake and YAML have been prepared, the user can build the ODT code with the \texttt{make} command, which places the code executable in the \texttt{run} directory. The most common errors that occur during the build process involve incorrect file paths or incomplete installation of required packages. See the build documentation for troubleshooting help. 
+
+Once the code is built, the user may optionally build a local copy of the documentation via Doxygen, which must be previously installed. This step is not required in order to run the ODT code. As an alternative, documentation can be accessed at the code repository wiki. 
+
+\subsubsection{Input files}
+
+User-modified input files are located within the \texttt{input} directory, which contains subdirectories that correspond to various case types that can be run with ODT. At minimum, a case's subdirectory must contain an \texttt{input.yaml} file, but may contain other files, or subfolders with supplementary information. 
+
+The \texttt{input} directory also contains the \texttt{gas\textunderscore mechanisms} subdirectory, which contains chemical mechanism files that can be used in reacting flow cases. For cases in which a chemical mechanism is not required, the \texttt{not\textunderscore used.xml} mechanism file is specified in \texttt{input.yaml}. Note that the chemical mechanism chosen for the case and specified in the input file must match the mechanism specified in the CMake configuration file during the ODT build process. 
+
+Input files contain simulation parameters in a human-readable format parsed by YAML. Within \texttt{input.yaml}, parameters are organized into sections, several of which are common to all input files. Parameter values present in the provided input files may be considered defaults that can be used to run a successful simulation of that case type. General code parameters are stored in the \texttt{params} class. Variables needed in a simulation but not provided in an input file (not recommended), are either given defaults specified in the \texttt{params} class or result in an error message. Details about individual parameters, including usage and typical values, are covered in the documentation.
+
+\subsubsection{Running ODT}
+
+To run a simulation, users must then navigate to the \texttt{run} directory, which contains the \texttt{odt.x} executable and several possible run scripts. The simplest option is \texttt{runOneRlz.sh}, which runs one realization of ODT in the specified configuration. In this run script, the user must alter two variables near the top of the file: \texttt{inputDir}, which specifies which input directory and files to use; and \texttt{caseName}, which provides a name for the simulation and the data files it outputs. The \texttt{runManyRlz.sh} script runs many realizations in serial, one after the other; it differs from \texttt{runOneRlz.sh} only in that the user must also alter the \texttt{nRlz} variable, which specifies the number of realizations to run. Each realization has a different seed value, which can be randomized or directly specified in the input file. To run the simulation with either \texttt{runOneRlz.sh} or \texttt{runManyRlz.sh}, save the run script and execute it at the command line. Users will see some output on the command line, but no data, which is instead output to the \texttt{data} directory.  
+
+ODT simulations can also be run in parallel using MPI. Two run scripts, \texttt{slrmJob.sh} and \texttt{slrmJob\textunderscore array.sh}, are configured using Slurm \cite{Yoo_2003}, a common workload manager used for massively parallel computing resources. This allows many ODT realizations to run in parallel rather than in serial, reducing overall simulation time. Individual realizations are independent (embarrassingly parallel), but users must take care with case names and input file changes to ensure that individual realizations or entire cases are not overridden accidentally. 
+
+\subsubsection{Data files and post-processing}
+
+For a given simulation, data is output to the \texttt{data} directory, which contains subdirectories for each simulation, specified by the \texttt{caseName} variable in the run script. Figure \ref{fig:data_folder_structure} illustrates the structure of the \texttt{data} directory and the locations of files within it. Each case folder is subdivided into \texttt{input}, \texttt{runtime}, \texttt{data}, and \texttt{post}. The \texttt{input} folder contains a copy of the input files used for the simulation; \texttt{runtime} contains runtime output, including eddy event information; \texttt{data} contains the raw data files; and \texttt{post} contains post-processed data files once they are generated. 
+
+\begin{figure}
+	\centering
+    \includegraphics[width=\textwidth]{fig_data_folder_structure.pdf} 
+	\caption{Data folder structure and file locations. Boxes indicate folders and ovals indicate files. For a given simulation, \texttt{caseName} will be replaced with the case name specified in the run script. The number attached to \texttt{caseName} folder names and to \texttt{runtime} data files indicates the realization number. The number attached to \texttt{dmp} files indicates the output time step, or ``dump" time, of the data file. These correspond to the order of the time steps listed in \texttt{input.yaml}.}
+\label{fig:data_folder_structure}
+\end{figure}
+
+To use post-processing tools, users navigate to the \texttt{post} directory. Within the \texttt{post} directory, data processing tools are organized by case type, which is specified in \texttt{input.yaml} and determines case-specific variables and simulation setup parameters (refer to the \texttt{domaincase} object in Figure \ref{fig:flowchart}). Each set of post-processing tools is different, but may contain some combination of Python scripts (often coordinated by a \texttt{driver.py} file), experimental data files for comparison and plot generation, or other supplementary files. Post-processed data and generated plots are deposited in the \texttt{data} directory, within the appropriate \texttt{caseName/post} folder.  
+
+% reference video that we will eventually make?
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Example Case: Canonical Jet Flame}
+\label{sec:examples}
+
+ODT is uniquely suited to reacting flow simulations. Here, we present illustrative ODT simulation results of a round, turbulent jet flame based on and compared to the experimental DLR-A flame of Meier et al. \cite{Meier_2000}. This canonical flame configuration has been used extensively to study and validate turbulent combustion models \cite{Pitsch_2000,Lindstedt_2005,Wang_2011,Fairweather_2004,Lee_2008,Lee_2009}. 
+
+The DLR-A fuel stream is mixture of 22.1\% CH$_4$, 33.2\% H$_2$, and 44.7\% N$_2$ (by volume) that issues into dry air via a nozzle with an inner diameter of 8 mm at a mean exit velocity of 42.2 m$\cdot$s$^{-1}$. The coflow air stream issues from a concentric nozzle 140 mm in diameter at a velocity of 0.3 m$\cdot$s$^{-1}$. The reported jet Reynolds number is 15,200.
+
+Previous ODT studies of turbulent jet flames have used the temporal planar formulation, but the spatial cylindrical formulation developed recently \cite{Lignell_2018} more closely matches the experimental configuration. This simulation uses the experimentally reported velocity profiles and jet dimensions.  
+The fuel was diluted with N$_2$ in the experimental flame to minimize radiative heat losses, and radiation is ignored in the simulation. This flame has a low Reynolds number, and the combustion chemistry proceeds quickly. The ODT simulation transports the chemical species O$_2$, N$_2$, CH$_4$, H$_2$, H$_2$O, and CO$_2$. We assume that reactions proceed to the products of complete combustion and apply simple, fast reaction rates according to the following chemical equations:
+\begin{align}
+	\mathrm{CH}_4 + 2\mathrm{O}_2 & \rightarrow \mathrm{CO}_2 + 2\mathrm{H}_2\mathrm{O}, \\
+	\mathrm{H}_2+\frac{1}{2}\mathrm{O}_2 & \rightarrow \mathrm{H}_2\mathrm{O}.
+\end{align}
+These assumptions are reasonable for illustrating ODT in the DLR-A reacting jet configuration with variable properties and heat release. 
+
+This simulation uses ODT parameters $C=20$, $\beta_{LES}=17$, and $Z=400$. The values of $C$ and $\beta_{LES}$ were adjusted to give good agreement with the experimental data, and the value of $Z$ is the same as the spatial simulations in \cite{Monson_2016}. 1024 independent flow realizations were performed in parallel and the results ensemble averaged. Downstream distance $y$ and radial position $r$ are normalized by the jet diameter $D$.
+
+\begin{figure}
+	\begin{center}
+		\begin{tabular}{ccc}
+			(a) & (b) & (c) \\
+            \includegraphics[width=1.7in]{fig_cl_uvel_DLR_test_11.pdf} &
+            \includegraphics[width=1.7in]{fig_cl_mixf_DLR_test_11.pdf} &
+            \includegraphics[width=1.7in]{fig_cl_temp_DLR_test_11.pdf}
+		\end{tabular}
+	\end{center}
+	\caption{DLR jet flame example case results: (a) mean axial velocity and RMS velocity along the centerline versus downstream location; (b) mean axial mixture fraction and RMS mixture fraction along the centerline versus downstream location; (c) mean axial temperature (K) and RMS temperature (K) along the centerline versus downstream location.}
+\label{fig:dlr_example_results}
+\end{figure}
+
+Figure~\ref{fig:dlr_example_results} displays the simulation results: axial mean and centerline values for (a) axial velocity $v$, (b) mixture fraction $\xi$, and (c) temperature $T$. The ODT results track the experimental data well for all three variables. The centerline temperature peaks about 100 K above the experimental data, but this small difference can be attributed to thermal radiation (which was neglected in this simulation) and the assumption that reactions proceed to the products of complete combustion rather than their equilibrium state. The centerline velocity shows a fast initial decrease that can be attributed to diffusion. Similarly, the increase in centerline velocity RMS values is delayed; this occurs due to the elapsed time model for large eddy suppression, which limits disturbances in the early stages of the flow to small eddies that occur on the jet edges away from the centerline. 
+
+To replicate this example case, build the code with the \texttt{CHEMISTRY = SIMPLEDLR} flag in the \texttt{user\textunderscore config} file and edit the desired run script with \texttt{inputDir = "../input/jetFlame/DLR\textunderscore A"} and a new case name such as \texttt{caseName = "jetFlame\textunderscore example"}. The input file for this case, located at \texttt{ODT/input/jetFlame/DLR\textunderscore A/input.yaml}, contains the appropriate parameters and does not need to be modified to match this example case. See the code documentation for data post-processing instructions.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Impact}
+\label{sec:impact}
+The ODT model is complex, challenging to implement, and difficult to cleanly separate from its implementation, all of which presents barriers to practitioners who wish to use the model. For instance, triplet mapa can be represented mathematically but are usually implemented as previously described, assuming an adaptive grid with variable cell sizes. Alternative formulations are used for fixed grids. The code presented here reduces these barriers by providing an open-source, well-documented, modularly styled code that can be used directly or modified to suit particular research goals. Its structure facilitates addressing new research questions, such as soot-flame-radiation-chemistry interactions, multi-phase reacting flows using Lagrangian particle models (such as diesel sprays), and coupled near-wall heat and momentum transfer. The code presented here has been extended to and demonstrated in such systems already, facilitated by the object-oriented structure. For example, this code has been extended to solve steady laminar flamelets \cite{Peters_1984}, requiring inheritance from the \texttt{solver}, \texttt{micromixer}, and \texttt{dv} (domain variable) classes.
+
+The structure of the ODT code, using an adaptive mesh and a Lagrangian formulation for diffusive advancement of transport equations, has several advantages, including simplicity of formulation and computational efficiency. The adaptive mesh minimizes the number of computational cells required and can be adapted to any variable of interest. This is especially important for flows with complex and expensive chemistry and flows with widely varying resolution demands such as near-wall flows. The Lagrangian formulation implies that cell faces move with fluid velocity (such as is present during flame expansion, for example). This treatment is inherently stable, removing the need for complex and diffusive hyperbolic conservation law treatments and their associated CFL constraints. The conservation equations, as in Equation \ref{eq:transport}, are similarly simplified.
+
+The code has been run on Linux, Mac, and Windows machines, including parallel clusters of up to 512 processor cores. Several research groups have used the code and contributed to its development. These include groups at Sandia National Laboratories, Brandenburg University of Technology Cottbus-Senftenberg, Chalmers University, and Combustion Science and Engineering, Inc. The latter company is the only organization known to use the code in a commercial setting, though on a combustion research project. 
+
+%Questions to answer in this section (from SoftwareX template)
+%\begin{enumerate}
+%	\item How can new research questions be pursued with this software?
+%		\begin{itemize}
+%			\item possibility of parametric studies (much harder with DNS/LES/RANS)
+%			\item study of late-flame soot and radiation interactions, soot emissions as smoke
+%			\item comparative radiation model studies?
+%		\end{itemize}
+%	\item How does the software improve pursuit of existing research questions?
+%		\begin{itemize}
+%			\item late-flame behavior becomes easier to study
+%			\item validation of LES subgrid models
+%			\item soot stuff, especially late in the flame (because soot moves slowly compared to gas species and therefore short simulation times like in DNS aren't enough to study it effectively)
+%		\end{itemize}
+%	\item How does the software change the daily practice of its users?
+%		\begin{itemize}
+%			\item cases take hours or days rather than weeks using supercomputer resources
+%			\item test cases can be run on local computers (unlike something like DNS) and as background tasks without disrupting other tasks
+%			\item ODT as a tool complements other approaches, can cover blind spots and be used in validation
+%		\end{itemize}
+%	\item How widespread is the software? Who uses it? (Within and outside of intended research area and/or group.)
+%		\begin{itemize}
+%			\item BYU group
+%			\item JCH at Sandia
+%			\item Chalmers group in Sweden (Marco Fistler, etc.)
+%			\item German university group (Heiko Schmidt, Juan Media, Marten Klein, etc.)
+%			\item TO DO: find other groups who have used or currently use ODT
+%		\end{itemize}
+%	\item How is the software used in commercial settings (if any)? Has it led to creation of spin-off companies?
+%		\begin{itemize}
+%			\item No commercial use (I think). 
+%		\end{itemize}
+%\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusion}
+\label{sec:conclusion}
+
+A clean and extensible implementation of the one-dimensional turbulence (ODT) model has been presented in an open-source, object-oriented C++ framework, motivated by advanced turbulent reacting flow research. The build process, directory structure, input file format, run process, and post-processing procedure were described in detail, including a representative reacting jet example case. 
+Access to a proven, documented code and a modern build procedure will aid researchers in applying and extending the model to new research questions. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conflict of Interest}
+%Please select the appropriate text:
+%
+%Potential conflict of interest exists:
+%We wish to draw the attention of the Editor to the following facts, which may be considered as potential conflicts of interest, and to significant financial contributions to this work. The nature of potential conflict of interest is described below: [Describe conflict of interest]
+
+%No conflict of interest exists:
+There are no known conflicts of interest associated with this publication and there has been no significant financial support for this work that could have influenced its outcome.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Acknowledgements}
+\label{acknowledgements}
+
+This work was supported in part by the National Science Foundation under Grant No. CBET-1403403.
+%TODO, we probably need to add some acknowlegements here for those who contributed to the code.
+
+%Special thanks to Alan R. Kerstein for his significant contributions to model development. Additional thanks to Heiko Schmidt, Juan Medina, and Marten Klein of Brandenburg University of Technology Cottbus-Senftenberg, Michael Oevermann and Marco Fistler of Chalmers University of Technology, and Vladimir P. Solovjov of Brigham Young University.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% The Appendices part is started with the command \appendix;
+%% appendix sections are then done as normal sections
+%% \appendix
+
+%% \section{}
+%% \label{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% References:
+
+
+\begin{thebibliography}{10}
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{\texttt{#1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+\expandafter\ifx\csname href\endcsname\relax
+  \def\href#1#2{#2} \def\path#1{#1}\fi
+
+\bibitem{Lignell_2015}
+D.~O. Lignell, G.~C. Fredline, A.~D. Lewis, Comparison of one-dimensional
+  turbulence and direct numerical simulations of soot formation and transport
+  in a nonpremixed ethylene jet flame 35~(2) (2015) 1199--1206.
+\newblock \href {http://dx.doi.org/10.1016/j.proci.2014.05.046}
+  {\path{doi:10.1016/j.proci.2014.05.046}}.
+
+\bibitem{Abboud_2015}
+A.~W. Abboud, C.~Schulz, T.~Saad, S.~T. Smith, D.~D. Harris, D.~O. Lignell, A
+  numerical comparison of precipitating turbulent flows between large-eddy
+  simulation and one-dimensional turbulence 61~(10) (2015) 3185--3197.
+\newblock \href {http://dx.doi.org/10.1002/aic.14870}
+  {\path{doi:10.1002/aic.14870}}.
+
+\bibitem{Kerstein_1999}
+A.~R. Kerstein, One-dimensional turbulence: model formulation and application
+  to homogeneous turbulence, shear flows, and buoyant stratified flows 392
+  (1999) 277--334.
+\newblock \href {http://dx.doi.org/10.1017/S0022112099005376}
+  {\path{doi:10.1017/S0022112099005376}}.
+
+\bibitem{Kerstein_2000}
+A.~R. Kerstein, T.~D. Dreeben, Prediction of turbulent free shear flow
+  statistics using a simple stochastic model 12~(2) (2000) 418--424.
+\newblock \href {http://dx.doi.org/10.1063/1.870319}
+  {\path{doi:10.1063/1.870319}}.
+
+\bibitem{Kerstein_2001}
+A.~R. Kerstein, W.~T. Ashurst, S.~Wunsch, V.~Nilsen, One-dimensional
+  turbulence: vector formulation and application to free shear flows 447 (2001)
+  85--109.
+\newblock \href {http://dx.doi.org/10.1017/S0022112001005778}
+  {\path{doi:10.1017/S0022112001005778}}.
+
+\bibitem{Echekki_2001}
+T.~Echekki, A.~R. Kerstein, T.~D. Dreeben, J.-Y. Chen, `one-dimensional
+  turbulence' simulation of turbulent jet diffusion flames: model formulation
+  and illustrative applications 125~(3) (2001) 1083--1105.
+\newblock \href {http://dx.doi.org/10.1016/S0010-2180(01)00228-0}
+  {\path{doi:10.1016/S0010-2180(01)00228-0}}.
+
+\bibitem{Hewson_2001}
+J.~C. Hewson, A.~R. Kerstein, Stochastic simulation of transport and chemical
+  kinetics in turbulent
+  {CH}\textsubscript{4}/{H}\textsubscript{2}/{N}\textsubscript{2 }flames 5~(4)
+  (2001) 669--697.
+\newblock \href {http://dx.doi.org/10.1088/1364-7830/5/4/309}
+  {\path{doi:10.1088/1364-7830/5/4/309}}.
+
+\bibitem{Hewson_2002}
+J.~C. Hewson, A.~R. Kerstein, Local extinction and reignition in nonpremixed
+  turbulent {CH}\textsubscript{4}/{H}\textsubscript{2}/{N}\textsubscript{2} jet
+  flames 174~(5-6) (2002) 35--66.
+\newblock \href {http://dx.doi.org/10.1080/713713031}
+  {\path{doi:10.1080/713713031}}.
+
+\bibitem{Lignell_2012}
+D.~O. Lignell, D.~S. Rappleye, One-dimensional-turbulence simulation of flame
+  extinction and reignition in planar ethylene jet flames 159~(9) (2012)
+  2930--2943.
+\newblock \href {http://dx.doi.org/10.1016/j.combustflame.2012.03.018}
+  {\path{doi:10.1016/j.combustflame.2012.03.018}}.
+
+\bibitem{Punati_2011}
+N.~Punati, J.~C. Sutherland, A.~R. Kerstein, E.~R. Hawkes, J.~H. Chen, An
+  evaluation of the one-dimensional turbulence model: comparison with direct
+  numerical simulations of {CO}/{H}\textsubscript{2 }jets with extinction and
+  reignition 33~(1) (2011) 1515--1522.
+\newblock \href {http://dx.doi.org/10.1016/j.proci.2010.06.127}
+  {\path{doi:10.1016/j.proci.2010.06.127}}.
+
+\bibitem{Abdelsamie_2017}
+A.~Abdelsamie, D.~O. Lignell, D.~Th{\'e}venin, Comparison between {ODT} and
+  {DNS} for ignition occurrence in turbulent premixed jet combustion:
+  safety-relevant applications 231~(10) (2017) 1709--1735.
+\newblock \href {http://dx.doi.org/10.1515/zpch-2016-0902}
+  {\path{doi:10.1515/zpch-2016-0902}}.
+
+\bibitem{Lignell_2017}
+D.~O. Lignell, V.~B. Lansinger, A.~R. Kerstein, A cylindrical formulation of
+  the one-dimensional turbulence ({ODT}) model for turbulent jet flames, in:
+  AIChE Annual Meeting 2017, {American Institute of Chemical Engineers}, 2017.
+
+\bibitem{Goshayeshi_2015}
+B.~Goshayeshi, J.~C. Sutherland, Prediction of oxy-coal flame stand-off using
+  high-fidelity thermochemical models and the one-dimensional turbulence model
+  35~(3) (2015) 2829--2837.
+\newblock \href {http://dx.doi.org/10.1016/j.proci.2014.07.003}
+  {\path{doi:10.1016/j.proci.2014.07.003}}.
+
+\bibitem{Jozefik_2015}
+Z.~Jozefik, A.~R. Kerstein, H.~Schmidt, S.~Lyra, H.~Kolla, J.~H. Chen,
+  One-dimensional turbulence modeling of a turbulent counterflow flame with
+  comparison to {DNS} 162~(8) (2015) 2999--3015.
+\newblock \href {http://dx.doi.org/10.1016/j.combustflame.2015.05.010}
+  {\path{doi:10.1016/j.combustflame.2015.05.010}}.
+
+\bibitem{Monson_2016}
+E.~I. Monson, D.~O. Lignell, M.~A. Finney, C.~Werner, Z.~Jozefik, A.~R.
+  Kerstein, R.~S. Hintze, Simulation of ethylene wall fires using the
+  spatially-evolving one-dimensional turbulence model 52~(1) (2016) 167--196.
+\newblock \href {http://dx.doi.org/10.1007/s10694-014-0441-2}
+  {\path{doi:10.1007/s10694-014-0441-2}}.
+
+\bibitem{Hewson_2006}
+J.~C. Hewson, A.~J. Ricks, S.~R. Tieszen, A.~R. Kerstein, R.~O. Fox,
+  Conditional-moment closure with differential diffusion for soot evolution in
+  fire, in: Center for Turbulence Research, Proceedings of the Summer Program
+  2006, {Stanford University}, 2006.
+
+\bibitem{Hewson_2009}
+J.~C. Hewson, A.~J. Ricks, S.~R. Tieszen, A.~R. Kerstein, R.~O. Fox, On the
+  transport of soot relative to a flame: modeling differential diffusion for
+  soot evolution in fire, in: H.~Bockhorn, A.~D'Anna, A.~F. Sarofim, H.~Wang
+  (Eds.), Combustion Generated Fine Carbonaceous Particles, {KIT Scientific
+  Publishing}, 2009, pp. 571--588.
+
+\bibitem{Lignell_2015b}
+D.~O. Lignell, J.~C. Hewson, One-dimensional turbulence simulation: overview
+  and application to soot formation in nonpremixed flames, in: SIAM Conference
+  on Computational Science and Engineering, 2015.
+
+\bibitem{Ricks_2010}
+A.~J. Ricks, J.~C. Hewson, A.~R. Kerstein, J.~P. Gore, S.~R. Tieszen, W.~T.
+  Ashurst, A spatially developing one-dimensional turbulence ({ODT}) study of
+  soot and enthalpy evolution in meter-scale buoyant turbulent flames 182~(1)
+  (2010) 60--101.
+\newblock \href {http://dx.doi.org/10.1080/00102200903297003}
+  {\path{doi:10.1080/00102200903297003}}.
+
+\bibitem{Sun_2017}
+G.~Sun, J.~C. Hewson, D.~O. Lignell, Evaluation of stochastic particle
+  dispersion modeling in turbulent round jets 89 (2017) 108--122.
+\newblock \href {http://dx.doi.org/10.1016/j.ijmultiphaseflow.2016.10.005}
+  {\path{doi:10.1016/j.ijmultiphaseflow.2016.10.005}}.
+
+\bibitem{Schmidt_2009}
+J.~R. Schmidt, J.~O.~L. Wendt, A.~R. Kerstein, Non-equilibrium wall deposition
+  of inertial particles in turbulent flow 137~(2) (2009) 233--257.
+\newblock \href {http://dx.doi.org/10.1007/s10955-009-9844-8}
+  {\path{doi:10.1007/s10955-009-9844-8}}.
+
+\bibitem{Sun_2014}
+G.~Sun, D.~O. Lignell, J.~C. Hewson, C.~R. Gin, Particle dispersion in
+  homogeneous turbulence using the one-dimensional turbulence model 26~(10)
+  (2014) 103301.
+\newblock \href {http://dx.doi.org/10.1063/1.4896555}
+  {\path{doi:10.1063/1.4896555}}.
+
+\bibitem{Fistler_2017}
+M.~Fistler, D.~O. Lignell, A.~R. Kerstein, M.~Oevermann, Numerical studies of
+  turbulent particle-laden jets using spatial approach of one-dimensional
+  turbulence, in: ILASS-Europe 28th Conference on Liquid Atomization and Spray
+  Systems, 2017.
+
+\bibitem{Cao_2008}
+S.~Cao, T.~Echekki, A low-dimensional stochastic closure model for combustion
+  large-eddy simulation 9.
+\newblock \href {http://dx.doi.org/10.1080/14685240701790714}
+  {\path{doi:10.1080/14685240701790714}}.
+
+\bibitem{Schmidt_2003}
+R.~C. Schmidt, A.~R. Kerstein, S.~Wunsch, V.~Nilsen, Near-wall {LES} closure
+  based on one-dimensional turbulence modeling 186~(1) (2003) 317--355.
+\newblock \href {http://dx.doi.org/10.1016/S0021-9991(03)00071-8}
+  {\path{doi:10.1016/S0021-9991(03)00071-8}}.
+
+\bibitem{Schmidt_2010}
+R.~C. Schmidt, A.~R. Kerstein, R.~McDermott, {ODTLES}: A multi-scale model for
+  3{D} turbulent flow based on one-dimensional turbulence modeling 199~(13-16)
+  (2010) 865--880.
+\newblock \href {http://dx.doi.org/10.1016/j.cma.2008.05.028}
+  {\path{doi:10.1016/j.cma.2008.05.028}}.
+
+\bibitem{GonzalezJuez_2011}
+E.~Gonzalez-Juez, A.~R. Kerstein, D.~O. Lignell, Fluxes across double-diffusive
+  interfaces: a one-dimensional-turbulence study 677 (2011) 218--254.
+\newblock \href {http://dx.doi.org/10.1017/jfm.2011.78}
+  {\path{doi:10.1017/jfm.2011.78}}.
+
+\bibitem{GonzalezJuez_2013}
+E.~Gonzalez-Juez, A.~R. Kerstein, D.~O. Lignell, Reactive {R}ayleigh--{T}aylor
+  turbulent mixing: a one-dimensional-turbulence study 107~(5) (2013) 506--525.
+\newblock \href {http://dx.doi.org/10.1080/03091929.2012.736504}
+  {\path{doi:10.1080/03091929.2012.736504}}.
+
+\bibitem{Wunsch_2001}
+S.~Wunsch, A.~R. Kerstein, A model for layer formation in stably stratified
+  turbulence 13~(3) (2001) 702--712.
+\newblock \href {http://dx.doi.org/10.1063/1.1344182}
+  {\path{doi:10.1063/1.1344182}}.
+
+\bibitem{Lignell_2018}
+D.~O. Lignell, V.~B. Lansinger, J.~Medina, M.~Klein, A.~R. Kerstein,
+  H.~Schmidt, M.~Fistler, M.~Oevermann, One-dimensional turbulence modeling for
+  cylindrical and spherical flows: model formulation and application 32~(4)
+  (2018) 495--520.
+\newblock \href {http://dx.doi.org/10.1007/s00162-018-0465-1}
+  {\path{doi:10.1007/s00162-018-0465-1}}.
+
+\bibitem{Klein_2018}
+M.~Klein, D.~O. Lignell, H.~Schmidt, Map-based modeling of turbulent
+  convection: application of the one-dimensional turbulence model to planar and
+  spherical geometries, in: International Conference on Rayleigh-Benard
+  Turbulence, 2018.
+
+\bibitem{Klein_2019}
+M.~Klein, D.~O. Lignell, H.~Schmidt, Stochastic modeling of temperature and
+  velocity statistics in spherical-shell convection, in: EGU Conference on
+  Recent developments in Geophysical Fluid Dynamics, 2019.
+
+\bibitem{Ashurst_2005}
+W.~T. Ashurst, A.~R. Kerstein, One-dimensional turbulence: variable-density
+  formulation and application to mixing layers 17~(2).
+\newblock \href {http://dx.doi.org/10.1063/1.1847413}
+  {\path{doi:10.1063/1.1847413}}.
+
+\bibitem{Lignell_2013}
+D.~O. Lignell, A.~R. Kerstein, G.~Sun, E.~I. Monson, Mesh adaption for
+  efficient multiscale implementation of one-dimensional turbulence 27~(3-4)
+  (2013) 273--295.
+\newblock \href {http://dx.doi.org/10.1007/s00162-012-0267-9}
+  {\path{doi:10.1007/s00162-012-0267-9}}.
+
+\bibitem{Cengel_2010}
+Y.~A. {\c{C}}engel, J.~M. Cimbala, Fluid Mechanics, 2nd Edition, {\c{C}}engel
+  series in engineering thermal-fluid sciences, {McGraw-Hill Higher Education},
+  2010.
+
+\bibitem{Beder_2008}
+J.~Beder, \href{https://github.com/jbeder/yaml-cpp/}{yaml-cpp v0.6.3} (2008).
+\newline\urlprefix\url{https://github.com/jbeder/yaml-cpp/}
+
+\bibitem{Strang_1968}
+G.~Strang, On the construction and comparison of difference schemes 5~(3)
+  (1968) 506--517.
+\newblock \href {http://dx.doi.org/10.1137/0705041}
+  {\path{doi:10.1137/0705041}}.
+
+\bibitem{Hindmarsh_2020}
+A.~C. Hindmarsh, R.~Serban, D.~R. Reynolds,
+  \href{https://computing.llnl.gov/projects/sundials/cvode}{{CVODE}},
+  https://computing.llnl.gov/sites/default/files/public/cv{\_}guide.pdf (2020).
+\newline\urlprefix\url{https://computing.llnl.gov/projects/sundials/cvode}
+
+\bibitem{Goodwin_2018}
+D.~G. Goodwin, R.~L. Speth, H.~K. Moffat, B.~W. Weber,
+  \href{https://cantera.org/}{Cantera} (2018).
+\newblock \href {http://dx.doi.org/10.5281/zenodo.1174508}
+  {\path{doi:10.5281/zenodo.1174508}}.
+\newline\urlprefix\url{https://cantera.org/}
+
+\bibitem{vanHeesch_2018}
+D.~{van Heesch}, \href{https://www.doxygen.nl/}{Doxygen} (2018).
+\newline\urlprefix\url{https://www.doxygen.nl/}
+
+\bibitem{Yoo_2003}
+A.~B. Yoo, M.~A. Jette, M.~Grondona, Slurm: simple linux utility for resource
+  management, in: D.~G. Feitelson, L.~Rudolph, U.~Schwiegelshohn (Eds.), Job
+  Scheduling Strategies For Parallel Processing, Vol. 2862 of Lecture notes in
+  computer science, 0302-9743, Springer, 2003, pp. 44--60.
+\newblock \href {http://dx.doi.org/10.1007/10968987-3}
+  {\path{doi:10.1007/10968987-3}}.
+
+\bibitem{Meier_2000}
+W.~Meier, R.~S. Barlow, Y.-L. Chen, J.-Y. Chen,
+  \href{https://tnfworkshop.org/data-archives/simplejet/dlrflames/}{Raman/{R}ayleigh/{LIF}
+  measurements in a turbulent
+  {CH}\textsubscript{4}/{H}\textsubscript{2}/{N}\textsubscript{2 }jet diffusion
+  flame: experimental techniques and turbulence--chemistry interaction} 123~(3)
+  (2000) 326--343.
+\newblock \href {http://dx.doi.org/10.1016/S0010-2180(00)00171-1}
+  {\path{doi:10.1016/S0010-2180(00)00171-1}}.
+\newline\urlprefix\url{https://tnfworkshop.org/data-archives/simplejet/dlrflames/}
+
+\bibitem{Pitsch_2000}
+H.~Pitsch, Unsteady flamelet modeling of differential diffusion in turbulent
+  jet diffusion flames 123~(3) (2000) 358--374.
+\newblock \href {http://dx.doi.org/10.1016/S0010-2180(00)00135-8}
+  {\path{doi:10.1016/S0010-2180(00)00135-8}}.
+
+\bibitem{Lindstedt_2005}
+R.~P. Lindstedt, H.~Ozarovsky, Joint scalar transported {PDF} modeling of
+  nonpiloted turbulent diffusion flames 143~(4) (2005) 471--490.
+\newblock \href {http://dx.doi.org/10.1016/j.combustflame.2005.08.030}
+  {\path{doi:10.1016/j.combustflame.2005.08.030}}.
+
+\bibitem{Wang_2011}
+H.~Wang, S.~B. Pope, Large eddy simulation/probability density function
+  modeling of a turbulent
+  {CH}\textsubscript{4}/{H}\textsubscript{2}/{N}\textsubscript{2} jet flame
+  33~(1) (2011) 1319--1330.
+\newblock \href {http://dx.doi.org/10.1016/j.proci.2010.08.004}
+  {\path{doi:10.1016/j.proci.2010.08.004}}.
+
+\bibitem{Fairweather_2004}
+M.~Fairweather, R.~M. Woolley, First-order conditional moment closure modeling
+  of turbulent, nonpremixed methane flames 138~(1-2) (2004) 3--19.
+\newblock \href {http://dx.doi.org/10.1016/j.combustflame.2004.03.001}
+  {\path{doi:10.1016/j.combustflame.2004.03.001}}.
+
+\bibitem{Lee_2008}
+K.~W. Lee, D.~H. Choi, Prediction of {NO} in turbulent diffusion flames using
+  eulerian particle flamelet model 12~(5) (2008) 905--927.
+\newblock \href {http://dx.doi.org/10.1080/13647830802094351}
+  {\path{doi:10.1080/13647830802094351}}.
+
+\bibitem{Lee_2009}
+K.~W. Lee, D.~H. Choi, Analysis of {NO} formation in high temperature diluted
+  air combustion in a coaxial jet flame using an unsteady flamelet model
+  52~(5-6) (2009) 1412--1420.
+\newblock \href {http://dx.doi.org/10.1016/j.ijheatmasstransfer.2008.08.015}
+  {\path{doi:10.1016/j.ijheatmasstransfer.2008.08.015}}.
+
+\end{thebibliography}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Current executable software version}
+\label{software_version}
+
+Software information is provided in Table~\ref{t:software}.
+
+%Ancillary data table required for sub version of the executable software: (x.1, x.2 etc.) kindly replace examples in right column with the correct information about your executables, and leave the left column as it is.
+
+\begin{table}[!h]
+\begin{tabular}{|l|p{6.5cm}|p{6.5cm}|}
+\hline
+\textbf{Nr.} & \textbf{(Executable) software metadata description} & \textbf{Please fill in this column} \\
+\hline
+S1 & Current software version & 1.0 \\
+\hline
+S2 & Permanent link to executables of this version  & For example: \href{https://github.com/BYUignite/ODT}{https://github.com/BYUignite/ODT} \\
+\hline
+S3 & Legal Software License & MIT \\
+\hline
+S4 & Computing platforms/Operating Systems & Linux, OS X, Microsoft Windows\\
+\hline
+S5 & Installation requirements \& dependencies & CMake 3.12+, Cantera, Git, Doxygen (optional) \\
+\hline
+S6 & If available, link to user manual - if formally published include a reference to the publication in the reference list & \href{https://github.com/BYUignite/ODT}{https://github.com/BYUignite/ODT}\\
+\hline
+S7 & Support email for questions & davidlignell@byu.edu \\
+\hline
+\end{tabular}
+\caption{Software metadata (optional)}
+\label{t:software}
+\end{table}
+
+\end{document}
+\endinput
