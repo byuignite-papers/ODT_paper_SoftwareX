@@ -19,12 +19,15 @@ clarifications as noted below.
 -   Building OPT:
 
     -   YAML: specify the name of the needed yaml package is: yaml-cpp
+
     ***We made this clarification in section 2.3.1 as requested.***
 
 -   Input files: Consider adding a feature that helps to specify the
     dumpTimes. For example, add the capability to parse the following
     values (Start, End, Step ) from the input file rather than
     specifying all the times you want to save the data manually.
+
+    ***We have now included this feature as requested. The user can specify times either through the original dumpTimes key, or through a new dumpTimesGen key that includes start, stop, and step variables. If both are present in the input file dumpTimesGen takes precedence, unless a negative start time is specified. This is demonstrated in the newly modified input file for the channel flow case, with comments to note the behavior and usage. We have also edited the paper and code documentation appropriately.
 
 -   Running ODT:
 
@@ -44,7 +47,7 @@ clarifications as noted below.
 
 -   Data files and Post-processing:
 
-    -   In the paper, you mentioned in line 118 that \<200b\>the package
+    -   In the paper, you mentioned in line 118 that the package
         contains auxiliary data processing and visualization tools.
         However, later in section 2.3.4 Data files and post-processing
         you mentioned in line 237 that those tools are organized by case
@@ -65,13 +68,17 @@ clarifications as noted below.
     -   Also, I would recommend that the post-processing data examples
         you provided be written in Jupyter notebooks for clarity.
 
+        ***This is a good recommendation. We have included a Jupyter notebook for post-processing the channelFlow, pipeFlow, and laminar_mixing_layer cases, with the latter already present. These will process the data and show comparison plots with the results. The previous stats.py functions are retained for consistency with the demonstration video and the codeocean module. The README files are updated. We have not made a jupyter notebook for the coldJet or jetFlame cases since these are larger simulations that are meant to be run and post-processed on a parallel processor with a job submission script, and that is how we and previous users have interacted with the code.***
+
 -   Impact:
 
     -   In the impact section line 298 the reference is missing.
+
     ***This has been corrected.***
 
 -   Lines 78 and 79: very cumbersome sentence. Suggest you use: the
     first term on the RHS of eq. 1 is\... while the second term is\...
+
     ***We have reworded this paragraph: rather than jumping into symbol definitions, we note the physical meanings of the two additive terms on the right-hand-side of the equation. We also note the generality of the diffusive mixing, and that transport is refered to as mixing, which has relevance to understanding the naming in the source code. We then define the variables used.***
 
 **Review 2**
@@ -99,5 +106,6 @@ Should we look to other \"equivalent\" observables?
 ***It is true that ODT cannot capture vortex structures, but many relevant aspects of turbulent flows, including turbulent particle dispersion are represented by ODT through the capture of a wide range of length and time scales. There are aspects of correlation of turbulence intensity with vortex structures that are relevant, for example. For more information, see the discussion on page 111 (section 6.4.2) of Guangyuan Sun's dissertation: https://search.proquest.com/pqdtglobal/docview/1762246838/D46E7CC1A3EA44FAPQ/7?accountid=4488***
 
 Minor, a reference appears as \[? \] on page 12.
+
 ***This has been corrected.**
 
