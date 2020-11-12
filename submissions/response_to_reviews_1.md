@@ -27,7 +27,7 @@ clarifications as noted below.
     values (Start, End, Step ) from the input file rather than
     specifying all the times you want to save the data manually.
 
-    ***We have now included this feature as requested. The user can specify times either through the original dumpTimes key, or through a new dumpTimesGen key that includes start, stop, and step variables. If both are present in the input file dumpTimesGen takes precedence, unless a negative start time is specified. This is demonstrated in the newly modified input file for the channel flow case, with comments to note the behavior and usage. We have also edited the paper and code documentation appropriately.
+    ***We have now included this feature as requested. The user can specify times either through the original dumpTimes key, or through a new dumpTimesGen key that includes start, stop, and step variables. If both are present in the input file dumpTimesGen takes precedence, unless a negative start time is specified. This is demonstrated in the newly modified input file for the channel flow case, with comments to note the behavior and usage. We have also edited the paper and code documentation appropriately.***
 
 -   Running ODT:
 
@@ -37,13 +37,15 @@ clarifications as noted below.
 
     -   My recommendation is to put all these run scripts under a single
         python interface that will allow the user to select the number
-        of realization, the number of processes ( when running in
-        parallel ), the input file, \... .
+        of realization, the number of processes (when running in
+        parallel), the input file, \... .
 
         -   consider using python classes for the interface, it will
             make you code much cleaner
 
         -   check argparse module in python!
+        
+    ***We have carefully considered the reviewer's suggestion. The running of the code falls into two broad categories: running smaller simulations on a desktop computer, and running larger parallel simulations on Linux clusters. The scripts that we have provided are well-documented, and we have also provided a video going through the process. In addition, many of our current users are used to the existing interface, and changing this might cause confusion. For single desktop jobs, the runOneRlz.sh script is easy to use, with two variables for the user to edit at the top. For parallel jobs, users will be familiar with scripts using job submission software (e.g., slurm), and examples are provided that can be edited. We will keep this option open.***
 
 -   Data files and Post-processing:
 
@@ -54,16 +56,24 @@ clarifications as noted below.
         type meaning that these post-processing tools are specific for
         the input files provided as examples. This may cause confusion
         to the user.
+        
+        ***The reference on line 118 is a short note that post-processing tools are provided. The description in section 2.3.4 is more detailed and provides a more complete description. We certainly want to avoid confusion. We have edited the comment on line 118 to note that the post-processing tools are specific to the case, and include a pointer to the later discussion.***
 
     -   Also, you didn't mention the tools you provided that help the
         user load the data. (ODT/Post/tools)
+        
+        ***This is a good comment. We have added a paragraph to the end of section 2.3.4 that describes these tools.***
 
         -   I recommend that you put these functions under a python
             class that takes as a value the path to the data you saved.
             This will give flexibility to the user to load any data
             stored on his local or remote machines.
+            
+            ***This is a valid suggestion for implementation, and is very similar to the approach that we have chosen. Namely, the functions are in a python module and can be easily accessed by importing the module. Many of these functions take a single dictionary argument that provides the case name as well as relevant paths (e.g., to the data or post directories of the given case). This dictionary is build in the driver script based on the user-supplied case name. We have explaned this in the new paragraph in section 2.3.4 noted above.***
 
         -   Describe those functions in the paper.
+        <br>
+        ***Done, as requested.***
 
     -   Also, I would recommend that the post-processing data examples
         you provided be written in Jupyter notebooks for clarity.
@@ -107,5 +117,5 @@ Should we look to other \"equivalent\" observables?
 
 Minor, a reference appears as \[? \] on page 12.
 
-***This has been corrected.**
+***This has been corrected.***
 
